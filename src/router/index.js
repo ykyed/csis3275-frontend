@@ -1,12 +1,18 @@
 import { createWebHistory, createRouter } from "vue-router";
-import ShoeList from "../components/ShoeList.vue";
+import ShoesList from "../components/ShoesList.vue";
+import ShoesDetail from "../components/ShoesDetail.vue";
 
 const routes = [
     {
         path: "/",
-        alias: "/shoelist",
-        name: "shoeList",
-        component: ShoeList
+        alias: "/shoes",
+        name: "shoesList",
+        component: ShoesList
+    },
+    {
+        path: "/:title",
+        name: "shoesDetail",
+        component: ShoesDetail
     }
 ];
 

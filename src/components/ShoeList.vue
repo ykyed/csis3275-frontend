@@ -1,19 +1,16 @@
 <template>
-    <div>
-        <h2>Shoe List</h2>
-        <div>
-            <div v-if="loading">Loading...</div>
-            <div v-else class="card-container">
-                
-                <div class="card" v-for="shoe in shoeList" :key="shoe.productCode">
-                    <div @click="viewDetailInfo(shoe.productCode)">
-                        <img :src="shoe.thumbnail" alt="Shoe Image" class="shoe-image" />
-                            <div class="card-content">
-                                <h3>{{ shoe.title }}</h3>
-                                <p>{{ shoe.brand }}</p>
-                                <p>{{ shoe.price }}</p>
-                            </div>
-                    </div>
+    <div class="shoeList">
+        <div v-if="loading">Loading...</div>
+        <div v-else class="card-container">
+            
+            <div class="card" v-for="shoe in shoeList" :key="shoe.productCode">
+                <div @click="viewDetailInfo(shoe.productCode)">
+                    <img :src="shoe.thumbnail" alt="Shoe Image" class="shoe-image" />
+                        <div class="card-content">
+                            <h3>{{ shoe.title }}</h3>
+                            <p>{{ shoe.brand }}</p>
+                            <p>{{ shoe.price }}</p>
+                        </div>
                 </div>
             </div>
         </div>
@@ -57,6 +54,13 @@ export default {
 </script>
 
 <style>
+
+.shoeList {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
 .card-container {
   display: grid;
   grid-template-columns: auto auto auto auto; 

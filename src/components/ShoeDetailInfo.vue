@@ -1,14 +1,13 @@
 <template>
     <div>
         <!-- for test -->
-        <h2>Shoe Detail Info</h2>
         <div v-if="shoeDetailInfo && shoeDetailInfo.images && shoeDetailInfo.images.length">
             <div class="images-container">
                 <img v-for="(image, index) in shoeDetailInfo.images" :key="index" :src="image" alt="Shoe Image" class="shoe-image"/>
             </div>
         </div>
         <div v-else>
-            <p>Loading...</p>
+            <p></p>
         </div>
         <!-- end -->
     </div>

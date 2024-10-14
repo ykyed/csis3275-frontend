@@ -39,6 +39,7 @@ export default {
 html {
   overflow-y: scroll;
 }
+
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -80,14 +81,16 @@ body {
 }
 
 .nav-btn {
-  background-color: transparent;
+  width: 30px;  
+  height: 30px;
   border: none;
   cursor: pointer;
+  background-color: transparent;
 }
 
 .icon {
+  filter: invert(100%);
   width: 30px;  
   height: 30px;
-  filter: invert(100%);
 }
 </style>

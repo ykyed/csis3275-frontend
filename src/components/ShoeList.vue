@@ -36,6 +36,17 @@
                     </div>
 
                     <hr>
+
+                    <button @click="toggleDropdown('sizeDropdown')" class="dropdown-btn">
+                        Size
+                    </button>
+                    <div v-if="showDropdowns.sizeDropdown" class="dropdown-content">
+                        <label v-for="size in sizes" :key="size">
+                            <input type="checkbox" :value="size" v-model="selectedSizes"  @change="applyFilters"/> {{ size }}
+                        </label>
+                    </div>
+
+                    <hr>
                 </div>
             </div>
 
@@ -80,11 +91,14 @@ export default {
             selectedStyles:[],   
             colors: [],
             selectedColors: [],
+            sizes: [],
+            selectedSizes: [],
             loading: true,
             showDropdowns: { 
                 brandDropdown: false,
                 styleDropdown: false,
-                colorDropdown: false
+                colorDropdown: false,
+                sizeDropdown: false
             }
         };
     },
@@ -93,13 +107,9 @@ export default {
         this.getBrands();
         this.getStyles();
         this.getColors();
+        this.getSizes();
     },
-    props: {
-        rating: {
-            type: Number,
-            Required: true
-        }
-    },
+  
     methods: {
         getShoeList() {
             ApiService.getShoeList()
@@ -145,14 +155,27 @@ export default {
 
         },
 
+        getSizes() {
+            ApiService.getSizeList()
+                .then(response => {
+                    this.sizes = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+
         clearFilters() {
             this.filteredShoeList = this.shoeList; 
         },
 
         applyFilters() {
-            ApiService.getFilteredShoeList(this.selectedBrands, this.selectedStyles, this.selectedColors) 
+            
+            ApiService.getFilteredShoeList(this.selectedBrands, this.selectedStyles, this.selectedColors, this.selectedSizes) 
                 .then(response => {
+                    
                     this.filteredShoeList = response.data;  
+                    console.log(this.filteredShoeList);
                 })
                 .catch(error => {
                     console.error(error);
@@ -174,7 +197,7 @@ export default {
                     color: 'transparent'
                 };
             } else {
-                return { color: 'white' };
+                return { color: 'transparent' };
             }
         },
     
@@ -235,6 +258,7 @@ export default {
 .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, 200px);
+    grid-template-rows: repeat(auto-fit, 300px);
     grid-gap: 20px; 
     padding: 10px;
     width: 85%;
@@ -244,6 +268,7 @@ export default {
 
 .card {
     width: 200px;
+    height: 300px;
     border-radius: 4px; 
     transition: transform 0.1s;
     padding: 10px;

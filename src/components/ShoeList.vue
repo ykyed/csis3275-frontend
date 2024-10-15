@@ -234,10 +234,12 @@ export default {
 
 .card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-gap: 16px; 
+    grid-template-columns: repeat(auto-fit, 200px);
+    grid-gap: 20px; 
     padding: 10px;
     width: 85%;
+    justify-content: start;
+    margin-left: 70px;
 }
 
 .card {

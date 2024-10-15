@@ -33,6 +33,14 @@ class ApiService {
   getShoeDetailInfo(productCode) {
     return http.get(`/shoes/${productCode}`);
   }
+
+  getUserListForAdmin() {
+    return http.get("/admin/users");
+  }
+
+  getShoesListForAdmin() {
+    return http.get("/admin/shoes");
+  }
 }
 
 export default new ApiService();

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header class="header">
-        <div class="logo">
+        <div class="logo" @click="goToAdminPage"> 
             <img src="@/assets/appLogo_b.png" alt="App Logo" class="app-logo" />
         </div>
         <nav class="nav-buttons">
@@ -29,6 +29,9 @@ export default {
     },
     goToCart() {
       this.$router.push({ name: 'CartItem' });
+    },
+    goToAdminPage() {
+      this.$router.push({ name: 'AdminPage' });
     }
       }
 }

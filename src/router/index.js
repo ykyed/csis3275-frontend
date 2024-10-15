@@ -3,6 +3,7 @@ import ShoeList from "../components/ShoeList.vue";
 import ShoeDetailInfo from "../components/ShoeDetailInfo.vue";
 import UserLogin from "../components/UserLogin.vue";
 import CartItem from "../components/CartItem.vue";
+import AdminPage from "../components/AdminPage.vue";
 
 const routes = [
     {
@@ -24,7 +25,12 @@ const routes = [
         path: "/cart",
         name: "CartItem",
         component: CartItem
-    }
+    },
+    {
+        path: "/admin",
+        name: "AdminPage",
+        component: AdminPage
+    },
 ];
 
 const router = createRouter({

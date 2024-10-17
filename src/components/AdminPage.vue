@@ -26,12 +26,14 @@
         <tr>
           <th>ID</th>
           <th>ProductCode</th>
+          <th>Price</th>  
         </tr>
       </thead>
       <tbody>
         <tr v-for="shoe in shoes" :key="shoe.productCode">
           <td>{{ shoe.id }}</td>
           <td>{{ shoe.productCode }}</td>
+          <td>{{ shoe.price }}</td>
         </tr>
       </tbody>
     </table>
@@ -65,9 +67,9 @@ export default {
         },
 
         fetchShoes() {
-            ApiService.getShoesListForAdmin()
+            ApiService.getShoeList()
                 .then(Response => {
-                    this.users = Response.data;
+                    this.shoes = Response.data;
                 })
                 .catch(e => {
                    console.log(e.Response.data);

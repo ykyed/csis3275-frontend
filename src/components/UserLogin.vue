@@ -29,7 +29,14 @@
       <div v-if="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
-    </div>
+
+    <!-- Button to navigate to SignUp page -->
+    <p>Would you like to join us?<router-link to="/SignUp">
+        <br>Sign up</router-link></p>
+        
+  </div>
+
+
   </template>
   
   <script>
@@ -43,7 +50,7 @@
     },
     methods: {
       async handleLogin() {
-        // 로그인 요청을 처리하는 로직
+        // 로그인 요청 처리
         if (this.email && this.password) {
           try {
             const response = await fetch('/api/login', {
@@ -62,7 +69,7 @@
             console.log('Login successful', data);
   
             // 성공 시 원하는 페이지로 리다이렉트 또는 상태 업데이트
-            this.$router.push('/dashboard'); // 예시로 대시보드로 이동
+            this.$router.push('/'); // ? 홈으로 가야할거 같은데 우리 홈이 뭔지 모르겠음
           } catch (error) {
             this.errorMessage = 'Invalid email or password. Please try again.';
           }
@@ -109,7 +116,7 @@
   }
   
   .login-button {
-    width: 50%;
+    width: 100%;
     padding: 0.8rem;
     font-size: 1rem;
     background-color: black;

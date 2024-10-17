@@ -47,6 +47,10 @@ class ApiService {
     return http.get("/admin/shoes");
   }
 
+  signup(userData){
+    return http.post("/signup", userData);
+  }
+
 }
 
 export default new ApiService();

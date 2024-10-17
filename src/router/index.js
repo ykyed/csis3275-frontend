@@ -4,6 +4,7 @@ import ShoeDetailInfo from "../components/ShoeDetailInfo.vue";
 import UserLogin from "../components/UserLogin.vue";
 import CartItem from "../components/CartItem.vue";
 import AdminPage from "../components/AdminPage.vue";
+import SignUp from '../components/SignUp.vue';
 
 const routes = [
     {
@@ -31,6 +32,12 @@ const routes = [
         name: "AdminPage",
         component: AdminPage
     },
+
+    {
+        path: '/signup',
+        name: 'SignUp',
+        component: SignUp
+    }
 ];
 
 const router = createRouter({

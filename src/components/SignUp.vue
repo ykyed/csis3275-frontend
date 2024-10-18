@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     validatePassword(password) {
-      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{8,}$/;
       return regex.test(password);
     },
     
@@ -67,6 +67,7 @@ export default {
 
       try {
         const response = await ApiService.signup({
+          
           firstName: this.firstName,
           lastName: this.lastName,
           dob: this.dob,

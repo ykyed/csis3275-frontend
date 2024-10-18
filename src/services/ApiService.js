@@ -51,6 +51,10 @@ class ApiService {
     return http.post("/signup", userData);
   }
 
+  login(credentials) {
+    return http.post("/login", credentials);
+  }
+
 }
 
 export default new ApiService();

@@ -66,8 +66,8 @@ export default {
             this.errorMessage = "";
 
             setTimeout(() => {
-            this.$router.push("/");
-            }, 3000);  // 3000ms = 3초
+            this.$router.back();
+            }, 1000);  
 
           } else {
             this.errorMessage = response.data; // 서버에서 전달한 오류 메시지 처리

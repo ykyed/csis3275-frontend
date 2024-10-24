@@ -86,7 +86,7 @@ export default {
 
           //성공메시지 보여주고 넘어가게 만듦
           setTimeout(() => {
-            this.$router.push("/login");
+            this.$router.back();
             }, 3000);  // 3000ms = 3초
           
         }else {

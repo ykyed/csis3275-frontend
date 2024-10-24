@@ -40,45 +40,45 @@
   </template>
   
   <script>
+  import ApiService from "../services/ApiService"; 
   export default {
-    data() {
-      return {
-        email: '',
-        password: '',
-        errorMessage: '', // 로그인 실패 시 에러 메시지를 담을 변수
-      };
-    },
-    methods: {
-      async handleLogin() {
-        // 로그인 요청 처리
-        if (this.email && this.password) {
-          try {
-            const response = await fetch('/api/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ email: this.email, password: this.password }),
-            });
-  
-            if (!response.ok) {
-              throw new Error('Login failed'); // 로그인 실패 처리
-            }
-  
-            const data = await response.json();
-            console.log('Login successful', data);
-  
-            // 성공 시 원하는 페이지로 리다이렉트 또는 상태 업데이트
-            this.$router.push('/'); // ? 홈으로 가야할거 같은데 우리 홈이 뭔지 모르겠음
-          } catch (error) {
-            this.errorMessage = 'Invalid email or password. Please try again.';
+  data() {
+    return {
+      email: "",
+      password: "",
+      successMessage: "",
+      errorMessage: "",
+    };
+  },
+  methods: {
+    async handleLogin() {
+      if (this.email && this.password) {
+        try {
+          
+          const response = await ApiService.login({
+            email: this.email,
+            password: this.password,
+          });
+
+          
+          if (response.data === "Login success.") {
+            this.successMessage = "You have successfully logged in!";
+            this.errorMessage = "";
+            // 필요 시 추가적인 로그인 후 동작 (페이지 이동 등)
+          } else {
+            this.errorMessage = response.data; // 서버에서 전달한 오류 메시지 처리
           }
-        } else {
-          this.errorMessage = 'Please fill in both fields.';
+        } catch (error) {
+          // 서버 호출 중 발생한 에러 처리
+          this.errorMessage = "Login failed.";
+          console.error(error);
         }
-      },
+      } else {
+        this.errorMessage = "Please enter both email and password.";
+      }
     },
-  };
+  },
+};
   </script>
   
   <style scoped>

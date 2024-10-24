@@ -46,12 +46,12 @@ const router = createRouter({
 });
 
 // 이전 경로를 저장하는 beforeEach 가드 추가
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
     if (to.name === 'UserLogin' && from.name) {
         localStorage.setItem('previousRoute', from.fullPath); // 이전 경로 저장
     }
     next();
-});
+});*/
 
 
 export default router;

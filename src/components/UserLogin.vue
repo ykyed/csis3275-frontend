@@ -38,10 +38,11 @@
 
 
   </template>
-  
-  <script>
-  import ApiService from "../services/ApiService"; 
-  export default {
+
+<script>
+import ApiService from "../services/ApiService"; 
+
+export default {
   data() {
     return {
       email: "",
@@ -54,17 +55,20 @@
     async handleLogin() {
       if (this.email && this.password) {
         try {
-          
           const response = await ApiService.login({
             email: this.email,
             password: this.password,
           });
+          console.log(response.data); 
 
-          
           if (response.data === "Login success.") {
             this.successMessage = "You have successfully logged in!";
             this.errorMessage = "";
-            // 필요 시 추가적인 로그인 후 동작 (페이지 이동 등)
+
+            setTimeout(() => {
+            this.$router.push("/");
+            }, 3000);  // 3000ms = 3초
+
           } else {
             this.errorMessage = response.data; // 서버에서 전달한 오류 메시지 처리
           }
@@ -79,7 +83,10 @@
     },
   },
 };
-  </script>
+</script>
+
+  
+
   
   <style scoped>
   .login-container {

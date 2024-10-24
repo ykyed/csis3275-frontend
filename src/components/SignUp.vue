@@ -28,7 +28,7 @@
 
 
 
-        <button type="submit">Sign up</button>
+        <button type="submit" class ="signup-btn">Sign up</button>
         <p v-if="successMessage" class="success">{{ successMessage }}</p>
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </form>
@@ -77,11 +77,20 @@ export default {
         console.log(response.data);
         console.log(this.firstName);
 
-        if (response.data === "Registration success.") {// true/false로 eclipse boolean 으로 맞춰주기!
-          this.successMessage = "Congratulationes. your account has been successfully created!";
+        
+
+        
+        if (response.data){
+          this.successMessage = "Congratulationes! your account has been successfully created!";
           this.errorMessage = "";
-        } else {
-          this.errorMessage = response.data;
+
+          //성공메시지 보여주고 넘어가게 만듦
+          setTimeout(() => {
+            this.$router.push("/login");
+            }, 3000);  // 3000ms = 3초
+          
+        }else {
+          this.errorMessage = "User with this email already exists."
         }
       } catch (error) {
         this.errorMessage = "Registration failed.";
@@ -97,12 +106,81 @@ export default {
   <style scoped>
   .signup-container {
     max-width: 400px;
-    margin: 100px auto;
+    margin: 100px auto; /* 위쪽 여백을 100px로 설정하여 아래로 내리기 */
+    padding: 20px; /* 내부 여백 추가 */
+    border: 1px solid #ccc; /* 테두리 추가 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    background-color: #f9f9f9; /* 배경색 추가 (선택 사항) */
+    font-family: 'Arial', sans-serif;
   }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+    margin-top:3%
+  }
+
+  input[type="email"],
+  input[type="text"],
+  input[type="password"],
+  input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    text-align: center; 
+  }
+
+  input[type="email"]:focus,
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  input[type="date"]:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  .signup-btn {
+    width: 40%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  .signup-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .success,
+  .error {
+    text-align: center;
+    margin-top: 10px;
+  }
+
   .success {
     color: green;
   }
+
   .error {
     color: red;
-  }
+}
   </style>

@@ -7,12 +7,12 @@
             <input type="email" v-model="email" required />
         </div>
         <div>
-          <label for="Firstname">First Name:</label>
-          <input type="text" v-model="firstname" required />
+          <label for="firstName">First Name:</label>
+          <input type="text" v-model="firstName" required />
         </div>
         <div>
-            <label for="Lastname">Last Name:</label>
-            <input type="text" v-model="lastname" required />
+            <label for="lastName">Last Name:</label>
+            <input type="text" v-model="lastName" required />
         </div>
 
         <div>
@@ -74,7 +74,10 @@ export default {
           email: this.email,
           password: this.password
         });
-        if (response.data === "Registration success.") {
+        console.log(response.data);
+        console.log(this.firstName);
+
+        if (response.data === "Registration success.") {// true/false로 eclipse boolean 으로 맞춰주기!
           this.successMessage = "Congratulationes. your account has been successfully created!";
           this.errorMessage = "";
         } else {

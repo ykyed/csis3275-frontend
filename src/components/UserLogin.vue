@@ -48,6 +48,9 @@
         errorMessage: '', // 로그인 실패 시 에러 메시지를 담을 변수
       };
     },
+
+
+
     methods: {
       async handleLogin() {
         // 로그인 요청 처리

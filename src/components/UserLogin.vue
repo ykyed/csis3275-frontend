@@ -70,7 +70,6 @@ export default {
             setTimeout(() => {
               this.$router.back(); //약간의 문제가 있음
             }, 1000);
-
           } else {
             this.errorMessage = "Invalid email or password"; // 실패 메시지
           }

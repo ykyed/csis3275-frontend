@@ -3,13 +3,13 @@
         <div>
             <!-- Shoe Information -->
             <div v-if="shoeDetailInfo">
-                <h2>{{ shoeDetailInfo.shoeInfo.name }}</h2>
+                <h2 class="title">{{ shoeDetailInfo.shoeInfo.title }}</h2>
                 <p>Price: ${{ shoeDetailInfo.shoeInfo.price }}</p>
 
                 <!-- Rating as Stars -->
                 <div class="rating">
                     <i v-for="n in 5" :key="n" class="fas" :class="n <= Math.floor(shoeDetailInfo.shoeInfo.rating) ? 'fa-star' : 'fa-star-half-alt'"></i>
-                    <p>Rating: {{ shoeDetailInfo.shoeInfo.rating }} / 5</p>
+                    <p>{{ shoeDetailInfo.shoeInfo.rating }} / 5</p>
                 </div>
 
                 <!-- Main Shoe Image -->
@@ -20,7 +20,7 @@
                     <!-- Thumbnails -->
                     <div class="thumbnail-container">
                         <img 
-                            v-for="(image, index) in shoeDetailInfo.images.slice(1)" 
+                            v-for="(image, index) in shoeDetailInfo.images.slice(0)" 
                             :key="index" 
                             :src="image" 
                             alt="Shoe Thumbnail" 
@@ -76,7 +76,7 @@ import ApiService from "../services/ApiService";
 import '@fortawesome/fontawesome-free/css/all.css';
 
 export default {
-    name: "shoeDetailInfo",
+    title: "shoeDetailInfo",
     data() {
         return {
         shoeDetailInfo: null,
@@ -121,10 +121,10 @@ export default {
         }
     }
 };
-
 </script>
 
 <style scoped>
+
 /* Styling for Main Shoe Image and Thumbnails */
 .main-image-container {
     text-align: center;
@@ -174,11 +174,13 @@ export default {
     margin-top: 50px;
 }
 
-.grid-container {
+.grid-container { 
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    grid-template-columns: repeat(5, 90px); /* 5 columns */
     grid-template-rows: repeat(3, auto);  /* 3 rows */
     gap: 10px;
+    grid-gap: 10px;
+    justify-content: center;
     justify-items: center;  /* Center buttons horizontally */
     align-items: center;    /* Center buttons vertically */
 }

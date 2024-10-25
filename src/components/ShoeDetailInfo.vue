@@ -3,13 +3,13 @@
         <div>
             <!-- Shoe Information -->
             <div v-if="shoeDetailInfo">
-                <h2 class="title">{{ shoeDetailInfo.shoeInfo.title }}</h2>
-                <p>Price: ${{ shoeDetailInfo.shoeInfo.price }}</p>
+                <h2>{{ shoeDetailInfo.name }}</h2>
+                <p>Price: ${{ shoeDetailInfo.price }}</p>
 
                 <!-- Rating as Stars -->
                 <div class="rating">
-                    <i v-for="n in 5" :key="n" class="fas" :class="n <= Math.floor(shoeDetailInfo.shoeInfo.rating) ? 'fa-star' : 'fa-star-half-alt'"></i>
-                    <p>{{ shoeDetailInfo.shoeInfo.rating }} / 5</p>
+                    <i v-for="n in 5" :key="n" class="fas" :class="n <= Math.floor(shoeDetailInfo.rating) ? 'fa-star' : 'fa-star-half-alt'"></i>
+                    <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
                 </div>
 
                 <!-- Main Shoe Image -->
@@ -20,7 +20,7 @@
                     <!-- Thumbnails -->
                     <div class="thumbnail-container">
                         <img 
-                            v-for="(image, index) in shoeDetailInfo.images.slice(0)" 
+                            v-for="(image, index) in shoeDetailInfo.images.slice(1)" 
                             :key="index" 
                             :src="image" 
                             alt="Shoe Thumbnail" 
@@ -76,7 +76,7 @@ import ApiService from "../services/ApiService";
 import '@fortawesome/fontawesome-free/css/all.css';
 
 export default {
-    title: "shoeDetailInfo",
+    name: "shoeDetailInfo",
     data() {
         return {
         shoeDetailInfo: null,
@@ -121,10 +121,10 @@ export default {
         }
     }
 };
+
 </script>
 
 <style scoped>
-
 /* Styling for Main Shoe Image and Thumbnails */
 .main-image-container {
     text-align: center;

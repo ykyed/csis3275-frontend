@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <header class="header">
-        <div class="logo" @click="goToAdminPage"> 
+        <div class="logo">
+          <button class="logo-btn" @click="goToMainPage">
             <img src="@/assets/appLogo_b.png" alt="App Logo" class="app-logo" />
+          </button>
         </div>
         <nav class="nav-buttons">
             <button @click="goToCart" class="nav-btn">
@@ -24,16 +26,19 @@
 export default {
   name: 'App',
   methods: {
+    goToMainPage() {
+      this.$router.push({ name: 'ShoeList' });
+    },
     goToLogin() {
       this.$router.push({ name: 'UserLogin' });
     },
     goToCart() {
       this.$router.push({ name: 'CartItem' });
-    },
-    goToAdminPage() {
-      this.$router.push({ name: 'AdminPage' });
     }
-      }
+    //goToAdminPage() {
+    //  this.$router.push({ name: 'AdminPage' });
+    //}
+  }
 }
 </script>
 
@@ -69,6 +74,11 @@ body {
     position: relative;
 }
 
+.logo {
+  position: relative;
+  z-index: 2;
+}
+
 .logo .app-logo {
     height: 60px; 
     margin-top: 5px;
@@ -81,6 +91,19 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    z-index: 1;
+}
+
+.logo-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logo-btn img {
+  height: 60px;  /* 로고 크기 */
+  margin-top: 5px;
 }
 
 .nav-btn {
@@ -96,4 +119,5 @@ body {
   width: 30px;  
   height: 30px;
 }
+
 </style>

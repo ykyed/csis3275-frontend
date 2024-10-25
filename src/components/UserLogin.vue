@@ -22,7 +22,7 @@
             placeholder="Enter your password" 
           />
         </div>
-        <button type="submit" class="login-button">Login</button>
+        <button type="submit" class="login-button">Sign in</button>
       </form>
   
       <!-- 로그인 실패 시 에러 메시지 -->
@@ -51,41 +51,40 @@ export default {
       errorMessage: "",
     };
   },
-  methods: {
-    async handleLogin() {
-      if (this.email && this.password) {
-        try {
-          const response = await ApiService.login({
-            email: this.email,
-            password: this.password,
-          });
-          console.log(response.data); 
 
-          if (response.data === "Login success.") {
+
+  methods: {
+  handleLogin() {
+    if (this.email && this.password) {
+      ApiService.login({
+        email: this.email,
+        password: this.password,
+      })
+        .then(response => {
+          console.log(response.data);
+
+          if (response.data === true) { // 서버가 true를 반환하면 로그인 성공
             this.successMessage = "You have successfully logged in!";
             this.errorMessage = "";
 
             setTimeout(() => {
-            this.$router.back();
-            }, 1000);  
-
+              this.$router.back(); //약간의 문제가 있음
+            }, 1000);
           } else {
-            this.errorMessage = response.data; // 서버에서 전달한 오류 메시지 처리
+            this.errorMessage = "Invalid email or password"; // 실패 메시지
           }
-        } catch (error) {
-          // 서버 호출 중 발생한 에러 처리
-          this.errorMessage = "Login failed.";
+        })
+        .catch(error => {
+          this.errorMessage = "Login failed."; // 서버 호출 중 에러 처리
           console.error(error);
-        }
-      } else {
-        this.errorMessage = "Please enter both email and password.";
-      }
-    },
+        });
+    } else {
+      this.errorMessage = "Please enter both email and password."; // 유효성 검사
+    }
   },
+},
 };
 </script>
-
-  
 
   
   <style scoped>
@@ -123,7 +122,7 @@ export default {
   }
   
   .login-button {
-    width: 100%;
+    width: 80%;
     padding: 0.8rem;
     font-size: 1rem;
     background-color: black;

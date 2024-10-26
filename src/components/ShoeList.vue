@@ -117,6 +117,7 @@ export default {
                     this.shoeList = response.data;
                     this.filteredShoeList = this.shoeList;
                     this.loading = false;
+                    console.log(this.shoeList.title);
                 })
                 .catch(e => {
                    console.log(e.response.data);

@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
       <h2>Sign in</h2>
-      <form @submit.prevent="handleLogin" class="login-form">
+      <form @submit.prevent="signin" class="login-form">
         <div class="form-group">
           <label for="email">Email:</label>
           <input 
@@ -41,6 +41,7 @@
 
 <script>
 import ApiService from "../services/ApiService"; 
+import http from "../http-common.js";
 
 export default {
   data() {
@@ -54,35 +55,84 @@ export default {
 
 
   methods: {
-  handleLogin() {
-    if (this.email && this.password) {
-      ApiService.login({
-        email: this.email,
-        password: this.password,
-      })
-        .then(response => {
-          console.log(response.data);
-
-          if (response.data === true) { // 서버가 true를 반환하면 로그인 성공
-            this.successMessage = "You have successfully logged in!";
-            this.errorMessage = "";
-
-            setTimeout(() => {
-              this.$router.back(); //약간의 문제가 있음
-            }, 1000);
-          } else {
-            this.errorMessage = "Invalid email or password"; // 실패 메시지
-          }
+    handleLogin() {
+      if (this.email && this.password) {
+        ApiService.login({
+          email: this.email,
+          password: this.password,
         })
-        .catch(error => {
-          this.errorMessage = "Login failed."; // 서버 호출 중 에러 처리
-          console.error(error);
+          .then(response => {
+            console.log(response.data);
+
+            if (response.data === true) { // 서버가 true를 반환하면 로그인 성공
+              this.successMessage = "You have successfully logged in!";
+              this.errorMessage = "";
+
+              setTimeout(() => {
+                this.$router.back(); //약간의 문제가 있음
+              }, 1000);
+            } else {
+              this.errorMessage = "Invalid email or password"; // 실패 메시지
+            }
+          })
+          .catch(error => {
+            this.errorMessage = "Login failed."; // 서버 호출 중 에러 처리
+            console.error(error);
+          });
+      } else {
+        this.errorMessage = "Please enter both email and password."; // 유효성 검사
+      }
+    },
+
+    async signin() {
+      try {
+
+        const params = new URLSearchParams();
+        params.append('username', this.email);
+        params.append('password', this.password);
+
+        console.log("loginBySpringboot:", params);
+
+        const response = await http.post('http://localhost:8080/login', params, {
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded' 
+            }
         });
-    } else {
-      this.errorMessage = "Please enter both email and password."; // 유효성 검사
-    }
+        console.log(response);
+
+        const userInfoResponse = await ApiService.getUserInfo();
+        console.log(userInfoResponse.data); 
+
+        localStorage.setItem('userRole', userInfoResponse.data.role); 
+        localStorage.setItem('userName', userInfoResponse.data.username);
+
+        console.log(userInfoResponse.data.role); 
+
+        if (userInfoResponse.data.role === "ADMIN") {
+
+          setTimeout(() => {
+            console.log("gotoadmin"); 
+            
+            this.$router.go(0); 
+            
+          }, 1000);
+        }
+        else if (userInfoResponse.data.role === "USER") {
+         
+          setTimeout(() => {
+            
+            this.$router.go(0); 
+            
+          }, 1000);
+        }
+      } catch (error) {
+        this.errorMessage = "Login failed.";
+        console.error("Error:", error);
+      }
+    },
   },
-},
+
+  
 };
 </script>
 

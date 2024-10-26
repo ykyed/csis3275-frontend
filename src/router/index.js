@@ -5,6 +5,7 @@ import UserLogin from "../components/UserLogin.vue";
 import CartItem from "../components/CartItem.vue";
 import AdminPage from "../components/AdminPage.vue";
 import SignUp from '../components/SignUp.vue';
+import app from '../App.vue';
 
 const routes = [
     {
@@ -30,9 +31,9 @@ const routes = [
     {
         path: "/admin",
         name: "AdminPage",
-        component: AdminPage
+        component: AdminPage,
+        meta: { requiresAdmin: true } 
     },
-
     {
         path: '/signup',
         name: 'SignUp',
@@ -44,6 +45,20 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+
+
+router.beforeEach(async (to, from, next) => {
+    try {
+
+        if (app.methods.fetchUserInfo) {
+            await app.methods.fetchUserInfo();
+          }
+    } catch (error) {
+      console.error("Failed to fetch user info on route change:", error);
+    }
+    next();
+  });
 
 // 이전 경로를 저장하는 beforeEach 가드 추가
 /*router.beforeEach((to, from, next) => {

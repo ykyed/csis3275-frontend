@@ -15,7 +15,7 @@
                 <img src="@/assets/account.png" alt="Login" class="icon" />
             </button>
 
-            <span v-if="userName" :key="componentKey" class="user-info">Hi, {{ userName }}</span>
+            <span v-if="userName" class="user-info">Hi, {{ userName }}</span>
         </nav>
     </header>
 
@@ -26,14 +26,17 @@
 <script>
 import ApiService from "./services/ApiService";
 import http from "./http-common.js";
+import { useUserStore } from './store/user';
 
 export default {
   name: 'App',
-  data() {
-    return {
-      userName: null,
-      componentKey: 0,
-    };
+  data() {},
+
+  computed: {
+    userName() {
+      const userStore = useUserStore();
+      return userStore.userName;
+    }
   },
 
   methods: {
@@ -44,8 +47,9 @@ export default {
     async logout() {
       try {
         http.post('http://localhost:8080/logout', {}, { withCredentials: true });
-        this.userName = null;
-        this.componentKey += 1;
+        const userStore = useUserStore();
+        userStore.clearUserName();
+
         this.$router.push({ name: 'ShoeList' });
       } catch (error) {
         console.error("Logout failed:", error);
@@ -66,26 +70,6 @@ export default {
     goToCart() {
       this.$router.push({ name: 'CartItem' });
     },
-
-    
-
-    async fetchUserInfo() {
-      try {
-    
-        console.log("fetchUserInfo called.");
-        const response = await ApiService.getUserInfo();
-        
-        if (response.data.name.length > 0) {
-          console.log("yh " + response.data.name);
-          this.userName = response.data.name;
-          this.componentKey += 1;
-          this.$route.go(0);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user info:", error);
-      }
-    },
-
   },
   mounted() {
     this.fetchUserInfo();

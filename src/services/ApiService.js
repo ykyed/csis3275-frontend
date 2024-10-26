@@ -40,11 +40,7 @@ class ApiService {
   }
 
   getUserListForAdmin() {
-    return http.get("/admin/users");
-  }
-
-  getShoesListForAdmin() {
-    return http.get("/admin/shoes");
+    return http.get("/users");
   }
 
   signup(userData){
@@ -55,6 +51,9 @@ class ApiService {
     return http.post("/login", credentials);
   }
 
+  getUserInfo() {
+    return http.get("/userinfo");
+  }
 }
 
 export default new ApiService();

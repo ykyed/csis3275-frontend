@@ -10,9 +10,12 @@
             <button @click="goToCart" class="nav-btn">
                 <img src="@/assets/cart.png" alt="Cart" class="icon" />
             </button>
+            
             <button @click="goToLogin" class="nav-btn">
                 <img src="@/assets/account.png" alt="Login" class="icon" />
             </button>
+
+            <span v-if="userName" :key="componentKey" class="user-info">Hi, {{ userName }}</span>
         </nav>
     </header>
 
@@ -21,24 +24,72 @@
 </template>
 
 <script>
-
+import ApiService from "./services/ApiService";
+import http from "./http-common.js";
 
 export default {
   name: 'App',
+  data() {
+    return {
+      userName: null,
+      componentKey: 0,
+    };
+  },
+
   methods: {
     goToMainPage() {
       this.$router.push({ name: 'ShoeList' });
     },
-    goToLogin() {
-      this.$router.push({ name: 'UserLogin' });
+
+    async logout() {
+      try {
+        http.post('http://localhost:8080/logout', {}, { withCredentials: true });
+        this.userName = null;
+        this.componentKey += 1;
+        this.$router.push({ name: 'ShoeList' });
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
     },
+
+    async goToLogin() {
+      const response = await ApiService.getUserInfo();
+      if (response.data.name && response.data.name.length > 0) {
+        console.log("logout");
+        this.logout();
+      }
+      else {
+        this.$router.push({ name: 'UserLogin' });
+      }
+    },
+
     goToCart() {
       this.$router.push({ name: 'CartItem' });
-    }
-    //goToAdminPage() {
-    //  this.$router.push({ name: 'AdminPage' });
-    //}
-  }
+    },
+
+    
+
+    async fetchUserInfo() {
+      try {
+    
+        console.log("fetchUserInfo called.");
+        const response = await ApiService.getUserInfo();
+        
+        if (response.data.name.length > 0) {
+          console.log("yh " + response.data.name);
+          this.userName = response.data.name;
+          this.componentKey += 1;
+          this.$route.go(0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+      }
+    },
+
+  },
+  mounted() {
+    this.fetchUserInfo();
+  },
 }
 </script>
 
@@ -102,7 +153,7 @@ body {
 }
 
 .logo-btn img {
-  height: 60px;  /* 로고 크기 */
+  height: 60px;
   margin-top: 5px;
 }
 
@@ -120,4 +171,11 @@ body {
   height: 30px;
 }
 
+.user-info {
+    color: white;            
+    font-size: 1rem;           
+    align-self: flex-end;     
+    margin-right: 10px;        
+    padding-bottom: 0px;       
+}
 </style>

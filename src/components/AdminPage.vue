@@ -6,6 +6,9 @@
         <tr>
           <th>ID</th>
           <th>Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Date of Birth</th>
           <th>Role</th>
         </tr>
       </thead>
@@ -13,6 +16,9 @@
         <tr v-for="user in users" :key="user.id">
           <td>{{ user.id }}</td>
           <td>{{ user.email }}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.dob }}</td>
           <td>{{ user.role }}</td>
         </tr>
       </tbody>
@@ -26,7 +32,7 @@
         <tr>
           <th>ID</th>
           <th>ProductCode</th>
-          <th>Price</th>  
+          <th>Price</th>
         </tr>
       </thead>
       <tbody>
@@ -59,6 +65,7 @@ export default {
         fetchUsers() {
             ApiService.getUserListForAdmin()
                 .then(Response => {
+                   console.log(Response.data);
                     this.users = Response.data;
                 })
                 .catch(e => {
@@ -69,6 +76,7 @@ export default {
         fetchShoes() {
             ApiService.getShoeList()
                 .then(Response => {
+                  console.log(Response.data);
                     this.shoes = Response.data;
                 })
                 .catch(e => {

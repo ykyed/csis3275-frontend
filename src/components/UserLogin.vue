@@ -107,6 +107,7 @@ export default {
         console.log(userInfoResponse.data); 
 
         userStore.setUserName(userInfoResponse.data.name);
+        userStore.setUserRole(userInfoResponse.data.role);
 
         console.log(userInfoResponse.data.role); 
 

@@ -1,4 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
+import { useUserStore } from '../store/user';
+
 import ShoeList from "../components/ShoeList.vue";
 import ShoeDetailInfo from "../components/ShoeDetailInfo.vue";
 import UserLogin from "../components/UserLogin.vue";
@@ -43,6 +45,16 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+});
+
+router.beforeEach((to, from, next) => {
+    const userStore = useUserStore();
+  
+    if (to.meta.requiresAdmin && userStore.userRole !== 'ADMIN') {
+      alert('Access denied. Admins only.');
+      return next({ name: 'ShoeList' });
+    }
+    next();
 });
 
 // 이전 경로를 저장하는 beforeEach 가드 추가

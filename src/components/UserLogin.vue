@@ -42,19 +42,22 @@
 <script>
 import ApiService from "../services/ApiService"; 
 import http from "../http-common.js";
+import { useUserStore } from '../store/user';
 
 export default {
   data() {
+    const userStore = useUserStore(); 
     return {
       email: "",
       password: "",
       successMessage: "",
       errorMessage: "",
+      userStore: userStore.userName,
     };
   },
 
-
   methods: {
+
     handleLogin() {
       if (this.email && this.password) {
         ApiService.login({
@@ -85,8 +88,8 @@ export default {
     },
 
     async signin() {
+      const userStore = useUserStore();
       try {
-
         const params = new URLSearchParams();
         params.append('username', this.email);
         params.append('password', this.password);
@@ -103,8 +106,7 @@ export default {
         const userInfoResponse = await ApiService.getUserInfo();
         console.log(userInfoResponse.data); 
 
-        localStorage.setItem('userRole', userInfoResponse.data.role); 
-        localStorage.setItem('userName', userInfoResponse.data.username);
+        userStore.setUserName(userInfoResponse.data.name);
 
         console.log(userInfoResponse.data.role); 
 
@@ -112,18 +114,15 @@ export default {
 
           setTimeout(() => {
             console.log("gotoadmin"); 
+            this.$router.push({ name: 'AdminPage' });
             
-            this.$router.go(0); 
-            
-          }, 1000);
+          }, 500);
         }
         else if (userInfoResponse.data.role === "USER") {
-         
+        
           setTimeout(() => {
-            
-            this.$router.go(0); 
-            
-          }, 1000);
+            this.$router.back(); 
+          }, 500);
         }
       } catch (error) {
         this.errorMessage = "Login failed.";

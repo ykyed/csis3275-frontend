@@ -39,6 +39,17 @@ export default {
     }
   },
 
+  mounted() {
+    const userStore = useUserStore();
+
+    if (!userStore.userName && localStorage.getItem('userName')) {
+      userStore.setUserName(localStorage.getItem('userName'));
+    }
+    if (!userStore.userRole && localStorage.getItem('userRole')) {
+      userStore.setUserRole(localStorage.getItem('userRole'));
+    }
+  },
+
   methods: {
     goToMainPage() {
       this.$router.push({ name: 'ShoeList' });
@@ -49,6 +60,7 @@ export default {
         http.post('http://localhost:8080/logout', {}, { withCredentials: true });
         const userStore = useUserStore();
         userStore.clearUserName();
+        userStore.clearUserRole();
 
         this.$router.push({ name: 'ShoeList' });
       } catch (error) {
@@ -70,9 +82,6 @@ export default {
     goToCart() {
       this.$router.push({ name: 'CartItem' });
     },
-  },
-  mounted() {
-    this.fetchUserInfo();
   },
 }
 </script>

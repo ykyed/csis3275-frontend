@@ -40,7 +40,7 @@ class ApiService {
   }
 
   getUserListForAdmin() {
-    return http.get("/users");
+    return http.get("admin/users");
   }
 
   signup(userData){
@@ -53,6 +53,30 @@ class ApiService {
 
   getUserInfo() {
     return http.get("/userinfo");
+  }
+
+  addItem(shoeInfo) {
+    return http.post("/admin/shoes", shoeInfo);
+  }
+
+  updateItem(shoeInfo) {
+    return http.put("/admin/shoes", shoeInfo);
+  }
+
+  deleteItem(productCode) {
+    return http.delete(`/admin/shoes/${productCode}`);
+  }
+
+  getSizeByProductCode(productCode) {
+    return http.get(`/sizes/${productCode}`);
+  }
+
+  addSizes(productCode, sizeInfo) {
+    return http.post(`/admin/sizes/${productCode}`, sizeInfo);
+  }
+
+  updateSizes(productCode, sizeInfo) {
+    return http.put(`/admin/sizes/${productCode}`, sizeInfo);
   }
 }
 

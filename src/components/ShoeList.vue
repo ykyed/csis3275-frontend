@@ -1,11 +1,19 @@
 <template>
+
+    <div class="shoe-count">
+        Total Shoes: {{ filteredShoeList.length }}
+    </div>
+
     <div class="main-container">
+
         <div class="shoeList">
 
             <div class="filter-container">
+
                 <div class="dropdown">
                     <button @click="toggleDropdown('brandDropdown')" class="dropdown-btn">
                         Brand
+                        <span class="dropdownicon">{{ showDropdowns.brandDropdown ? '-' : '+' }}</span>
                     </button>
                     <div v-if="showDropdowns.brandDropdown" class="dropdown-content">
                         <label v-for="brand in brands" :key="brand">
@@ -17,6 +25,7 @@
 
                     <button @click="toggleDropdown('styleDropdown')" class="dropdown-btn">
                         Style
+                        <span class="dropdownicon">{{ showDropdowns.styleDropdown ? '-' : '+' }}</span>
                     </button>
                     <div v-if="showDropdowns.styleDropdown" class="dropdown-content">
                         <label v-for="style in styles" :key="style">
@@ -28,6 +37,7 @@
 
                     <button @click="toggleDropdown('colorDropdown')" class="dropdown-btn">
                         Color
+                        <span class="dropdownicon">{{ showDropdowns.colorDropdown ? '-' : '+' }}</span>
                     </button>
                     <div v-if="showDropdowns.colorDropdown" class="dropdown-content">
                         <label v-for="color in colors" :key="color">
@@ -39,6 +49,7 @@
 
                     <button @click="toggleDropdown('sizeDropdown')" class="dropdown-btn">
                         Size
+                        <span class="dropdownicon">{{ showDropdowns.sizeDropdown ? '-' : '+' }}</span>
                     </button>
                     <div v-if="showDropdowns.sizeDropdown" class="dropdown-content">
                         <label v-for="size in sizes" :key="size">
@@ -219,18 +230,34 @@ export default {
     justify-content: center;
 }
 
+.shoe-count {
+    margin: auto;
+    margin-top: 20px;
+    width: 79%;
+    justify-content: center;
+    text-align: left;
+    font-size: 0.8rem;
+}
+
 .shoeList {
     width: 80%;
     display: flex;
-    margin-top: 30px;
+    margin-top: 0px;
 }
 
 .filter-container {
     width: 15%; 
-    margin-top: 20px;
+    margin-top: 8px;
+}
+
+.dropdown {
+    margin-bottom: 10px;
 }
 
 .dropdown-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     background-color: white;
     color: black;
@@ -241,6 +268,10 @@ export default {
     padding: 10px;
     border: none;
     cursor: pointer;
+}
+
+.dropdownicon {
+    margin-left: 10px;
 }
 
 .dropdown-content {

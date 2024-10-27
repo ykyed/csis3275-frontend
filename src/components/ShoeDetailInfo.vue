@@ -49,14 +49,16 @@
 
                 <!-- Add to Cart Button -->
                 <div>
-                    <button :disabled="!selectedSize" @click="addToCart">
+                    <button :disabled="!selectedSize" @click="addToCart" class="add-to-cart-button">
                         Add to Cart
                     </button>
                 </div>
 
+                <hr class="divider">
+
                 <!-- Add to Write A Review Button -->
                 <div>
-                    <button :disabled="!selectedSize" @click="writeAReview">
+                    <button @click="writeAReview" class="review-button">
                         Write a review
                     </button>
                 </div>
@@ -207,5 +209,19 @@ export default {
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.add-to-cart-button {
+    margin-top: 20px;
+}
+
+.divider {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+}
+
+.review-button {
+    margin-top: 20px;
 }
 </style>

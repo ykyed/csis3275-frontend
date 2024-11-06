@@ -91,7 +91,7 @@
 
               // 성공 메시지를 보여준 후 로그인 페이지로 이동
               setTimeout(() => {
-                this.$router.push("/login");
+                this.$router.back();
               }, 1000);
             } else {
               this.errorMessage = "User with this email already exists.";

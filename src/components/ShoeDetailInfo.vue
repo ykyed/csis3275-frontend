@@ -118,6 +118,10 @@ export default {
                     console.log(e.response.data);
                 });
         },
+        writeAReview(){
+            //this.$router.push('/reviews'); // review 페이지로 이동
+            this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
+        },
 
         addToCart() {
             const cartItem = {
@@ -178,6 +182,8 @@ export default {
         selectSize(size) {
             this.selectedSize = size;  // Mark selected size
         }
+
+        
     }
 };
 

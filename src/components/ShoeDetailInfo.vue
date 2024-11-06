@@ -55,6 +55,18 @@
                 </div>
 
                 <hr class="divider">
+                <!-- Display Reviews -->
+                <div v-if="reviews.length">
+                    <h3>Customer Reviews</h3>
+                    <div v-for="(review, index) in reviews" :key="index" class="review">
+                        <h4>{{ review.title }}</h4>
+                        <p>Rating: {{ review.rating }} / 5</p>
+                        <p>{{ review.comment }}</p>
+                    </div>
+                </div>
+                <div v-else>
+                    <p>No reviews available for this product.</p>
+                </div>
 
                 <!-- Add to Write A Review Button -->
                 <div>
@@ -81,16 +93,18 @@ export default {
     name: "shoeDetailInfo",
     data() {
         return {
-        shoeDetailInfo: null,
+        shoeDetailInfo: {},
         mainImage: null,
         loading: true,
         selectedSize: null,  // Track selected size
         shoeSizes: this.generateShoeSizes(6, 13, 0.5), // Create size range from 6 to 13 in 0.5 increments
+        reviews:[]
         };
     },
     created() {
         const productcode = this.$route.params.productCode;
         this.getShoeDetailInfo(productcode);
+        this.fetchReviews();
     },
     methods: {
         getShoeDetailInfo(productcode) {
@@ -102,6 +116,18 @@ export default {
                 })
                 .catch(e => {
                     console.log(e.response.data);
+                });
+        },
+
+        fetchReviews() {
+            const productCode = this.$route.params.productCode;
+            fetch(`http://localhost:8080/api/reviews/${productCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    this.reviews = data;
+                })
+                .catch(error => {
+                    console.error("Error fetching reviews:", error);
                 });
         },
 
@@ -212,7 +238,9 @@ button:disabled {
 }
 
 .add-to-cart-button {
-    margin-top: 20px;
+    margin-top: 30px;
+    font-size: 15px;
+    padding: 10px 15px;
 }
 
 .divider {
@@ -221,7 +249,16 @@ button:disabled {
     border-top: 1px solid #ccc;
 }
 
+.review {
+    margin: 15px 30px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
 .review-button {
-    margin-top: 20px;
+    margin: 20px;
+    font-size: 15px;
+    padding: 10px 15px;
 }
 </style>

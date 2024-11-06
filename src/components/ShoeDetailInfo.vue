@@ -119,6 +119,37 @@ export default {
                 });
         },
 
+        addToCart() {
+            const cartItem = {
+                productCode: this.shoeDetailInfo.productCode,  // Ensure correct productCode
+                productName: this.shoeDetailInfo.name,  // Store product name
+                size: this.selectedSize,
+                quantity: 1, // You can add logic to select the quantity
+                mainImage: this.shoeDetailInfo.images[0],  // Add the main image URL
+            };
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];  // Get existing cart from localStorage
+            
+            // Check if the productCode already exists in the cart
+            const existingItemIndex = cart.findIndex(item => 
+                item.productCode === cartItem.productCode && item.size === cartItem.size
+            );
+
+            if (existingItemIndex !== -1) {
+                // If item already exists, update the quantity
+                cart[existingItemIndex].quantity += cartItem.quantity;
+                alert("Item updated in the cart!");
+            } else {
+                // If item does not exist, add new item to the cart
+                cart.push(cartItem);
+                alert("Item added to the cart!");
+            }
+
+            // Save updated cart back to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+        },
+
+
         fetchReviews() {
             const productCode = this.$route.params.productCode;
             fetch(`http://localhost:8080/api/reviews/${productCode}`)

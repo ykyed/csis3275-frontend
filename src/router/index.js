@@ -7,6 +7,8 @@ import UserLogin from "../components/UserLogin.vue";
 import CartItem from "../components/CartItem.vue";
 import AdminPage from "../components/AdminPage.vue";
 import SignUp from '../components/SignUp.vue';
+import ReviewPage from '../components/ReviewPage.vue'; 
+
 
 const routes = [
     {
@@ -36,9 +38,15 @@ const routes = [
         meta: { requiresAdmin: true } 
     },
     {
-        path: '/signup',
-        name: 'SignUp',
+        path: "/signup",
+        name: "SignUp",
         component: SignUp
+    },
+    {
+        path: "/reviews/:productCode",
+        name: "ReviewPage",
+        component: ReviewPage,
+        props: true 
     }
 ];
 

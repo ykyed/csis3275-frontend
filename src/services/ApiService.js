@@ -78,6 +78,12 @@ class ApiService {
   updateSizes(productCode, sizeInfo) {
     return http.put(`/admin/sizes/${productCode}`, sizeInfo);
   }
+
+  addReview(reviewInfo) {
+    return http.post("/reviews", reviewInfo);
+  }
 }
+
+
 
 export default new ApiService();

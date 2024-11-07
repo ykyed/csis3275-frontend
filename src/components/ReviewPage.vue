@@ -8,83 +8,97 @@
       
       <div class="review-form">
         <label for="review-title">Review title</label>
-        <input type="text" id="review-title" v-model="reviewTitle" placeholder="Summarize your review in 150 characters or less" />
+        <input type="text" id="review-title" v-model="title" placeholder="Summarize your review in 150 characters or less" />
   
-        <label for="review-text">Your Review</label>
-        <textarea id="review-text" v-model="reviewText" placeholder="Describe what you liked, what you didn’t like and other key things shoppers should know. Minimum 30 characters."></textarea>
+        <label for="review-comment">Your Review</label>
+        <textarea id="review-comment" v-model="comment" placeholder="Describe what you liked, what you didn’t like and other key things shoppers should know. Minimum 30 characters."></textarea>
         
         <button @click="submitReview">Submit Review</button>
       </div>
-  
+
+      <div v-if="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+    
       <div class="reviews-list">
         <h3>Reviews</h3>
         <div v-for="review in reviews" :key="review.id">
           <p><strong>{{ review.title }}</strong> - {{ review.rating }} ★</p>
-          <p>{{ review.text }}</p>
+          <p>{{ review.comment }}</p>
         </div>
       </div>
     </div>
   </template>
   
   <script>
+  import ApiService from "../services/ApiService"; 
   import axios from 'axios';
-  //import ApiService from "../services/ApiService";
-  
-  export default {
-    name:'ReviewPage',
-    data() {
-      return {
-        productName: '',
-        productCode: 'NIKE_AIR_MAX', // Example product code, adjust as needed
-        rating: 0,
-        reviewTitle: '',
-        reviewText: '',
-        reviews: []
-      };
+
+export default {
+  name: 'ReviewPage',
+  props: {
+    productCode: String
+  },
+  data() {
+    return {
+      productName: "",
+      rating: 0.0,
+      title: "",
+      comment: "",
+      reviews: [],
+      successMessage:"",
+    };
+  },
+  created() {
+    this.fetchReviews();
+  },
+  methods: {
+    setRating(index) {
+      this.rating = index;
     },
-    created() {
-      this.fetchReviews();
-    },
-    methods: {
-      setRating(index) {
-        this.rating = index;
-      },
-      async fetchReviews() {
-        try {
-          const response = await axios.get(`http://localhost:8080/api/reviews/${this.productCode}`);
-          this.reviews = response.data;
-        } catch (error) {
-          console.error("Failed to fetch reviews:", error);
-        }
-      },
-      async submitReview() {
-        if (this.reviewText.length >= 30 && this.reviewTitle.length > 0 && this.rating > 0) {
-          try {
-            const reviewInfo = {
-              productCode: this.productCode,
-              rating: this.rating,
-              title: this.reviewTitle,
-              text: this.reviewText
-            };
-            await axios.post('http://localhost:8080/api/reviews', reviewInfo);
-            alert('Review submitted successfully');
-            this.fetchReviews(); // Refresh the review list after submission
-            this.resetForm();
-          } catch (error) {
-            console.error("Failed to submit review:", error);
-          }
-        } else {
-          alert('Please fill out all fields with valid information.');
-        }
-      },
-      resetForm() {
-        this.rating = 0;
-        this.reviewTitle = '';
-        this.reviewText = '';
+    async fetchReviews() {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/reviews/${this.productCode}`);
+        this.reviews = response.data;
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
       }
+    },
+    async submitReview() {
+      if (this.comment.length >= 30 && this.title.length > 0 && this.rating > 0) {
+        try {
+          const reviewInfo = {
+            productCode: this.productCode,
+            rating: this.rating,
+            title: this.title,
+            comment: this.comment
+          };
+          console.log("Sending review data:", reviewInfo);  //써놓기만 하고 시도를 못해봄 방법을 모르겠어요
+          await ApiService.addReview(reviewInfo); 
+          this.successMessage = 'Thank you for sharing your experience!';// 성공메시지 뜨게 해봄
+          
+          setTimeout(() => {
+                this.$router.back();
+              }, 1000);
+            
+          this.fetchReviews(); 
+          this.resetForm();
+        } catch (error) {
+          console.error("Failed to submit review:", error);
+        }
+      } else {
+        alert('Please fill out all fields with valid information.');
+      }
+    },
+    resetForm() {
+      this.rating = 0.0;
+      this.title = '';
+      this.comment = '';
     }
-  };
-  </script>
+  }
+};
+
+</script>
 
     <style scoped>
     .review-container {
@@ -140,6 +154,12 @@
     button:hover {
     background-color: #0056b3;
     }
+
+  .success-message {
+    margin-top: 20px;
+    color: blue;
+    font-size: 1.2em;
+  }
 </style>
   
   

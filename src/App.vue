@@ -85,8 +85,14 @@ export default {
       }
     },
 
-    goToCart() {
-      this.$router.push({ name: 'CartItem' });
+    async goToCart() {
+      const response = await ApiService.getUserInfo();
+      if (response.data.name && response.data.name.length > 0) {
+        this.$router.push({ name: 'CartItem' });
+      }
+      else {
+        this.$router.push({ name: 'UserLogin' });
+      }      
     },
   },
 }

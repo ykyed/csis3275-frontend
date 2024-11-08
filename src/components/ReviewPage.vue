@@ -112,8 +112,6 @@ export default {
             title: this.title,
             comment: this.comment
           };
-
-          console.log("Sending review data:", reviewInfo); 
           await ApiService.addReview(reviewInfo); 
           this.successMessage = 'Thank you for sharing your experience!';
 

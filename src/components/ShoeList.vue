@@ -128,10 +128,10 @@ export default {
                     this.shoeList = response.data;
                     this.filteredShoeList = this.shoeList;
                     this.loading = false;
-                    console.log(this.shoeList.title);
+                    console.log("getShoeList title: " + this.shoeList[0].title);
                 })
                 .catch(e => {
-                   console.log(e.response.data);
+                   console.log("getShoeList: " + e.response.data);
                 });
         },
 
@@ -187,7 +187,7 @@ export default {
                 .then(response => {
                     
                     this.filteredShoeList = response.data;  
-                    console.log(this.filteredShoeList);
+                    console.log("applyFilters : " + this.filteredShoeList);
                 })
                 .catch(error => {
                     console.error(error);

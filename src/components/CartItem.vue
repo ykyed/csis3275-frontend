@@ -1,6 +1,5 @@
 <template>
   <div class="cart-container">
-    <h2>Your Cart</h2>
     <div v-if="cartItems.length > 0" class="cart-list">
       <div v-for="(item, index) in cartItems" :key="index" class="cart-item">
         <img :src="item.mainImage" alt="Shoe Image" class="cart-item-image" />
@@ -12,7 +11,7 @@
       </div>
     </div>
     <div v-else>
-      <p>Your cart is empty.</p>
+      <p>Your cart is empty</p>
     </div>
 
     <hr class="divider">

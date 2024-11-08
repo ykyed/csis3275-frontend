@@ -35,18 +35,24 @@ export default {
   computed: {
     userName() {
       const userStore = useUserStore();
+      console.log("computed: " + userStore.userName);
       return userStore.userName;
     }
   },
 
-  mounted() {
+  async mounted() {
     const userStore = useUserStore();
+    const response = await ApiService.getUserInfo();
 
-    if (!userStore.userName && localStorage.getItem('userName')) {
-      userStore.setUserName(localStorage.getItem('userName'));
+    console.log("mounted: name: " + response.data.name);
+
+    if (response.data.name && response.data.name.length > 0) {
+      userStore.setUserName(response.data.name);
+      userStore.setUserRole(response.data.role);
     }
-    if (!userStore.userRole && localStorage.getItem('userRole')) {
-      userStore.setUserRole(localStorage.getItem('userRole'));
+    else {
+      userStore.clearUserName();
+      userStore.clearUserRole();
     }
   },
 
@@ -79,8 +85,14 @@ export default {
       }
     },
 
-    goToCart() {
-      this.$router.push({ name: 'CartItem' });
+    async goToCart() {
+      const response = await ApiService.getUserInfo();
+      if (response.data.name && response.data.name.length > 0) {
+        this.$router.push({ name: 'CartItem' });
+      }
+      else {
+        this.$router.push({ name: 'UserLogin' });
+      }      
     },
   },
 }

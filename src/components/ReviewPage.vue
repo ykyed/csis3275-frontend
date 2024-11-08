@@ -1,11 +1,25 @@
 <template>
     <div class="review-container">
       <h2>{{ productName }}</h2>
+
+      <div v-if="shoeDetailInfo">
+      <h2>{{ shoeDetailInfo.name }}</h2>
+      <p>Price: ${{ shoeDetailInfo.price }}</p>
+
+      <!-- 메인 이미지 -->
+      <div class="main-image-container">
+        <img :src="mainImage" alt="Main Shoe Image" class="main-shoe-image"/>
+      </div>
+    </div>
+    
       
       <div class="rating">
-        <span v-for="index in 5" :key="index" @click="setRating(index)" :class="{ 'filled': index <= rating }">★</span>
+        <i v-for="n in 5" :key="n" class="fas" 
+          :class="n <= rating ? 'fa-star filled' : 'fa-star'"
+          @click="setRating(n)"></i>
       </div>
       
+
       <div class="review-form">
         <label for="review-title">Review title</label>
         <input type="text" id="review-title" v-model="title" placeholder="Summarize your review in 150 characters or less" />
@@ -19,20 +33,15 @@
       <div v-if="successMessage" class="success-message">
         {{ successMessage }}
       </div>
-    
-      <div class="reviews-list">
-        <h3>Reviews</h3>
-        <div v-for="review in reviews" :key="review.id">
-          <p><strong>{{ review.title }}</strong> - {{ review.rating }} ★</p>
-          <p>{{ review.comment }}</p>
-        </div>
-      </div>
+
     </div>
+    
   </template>
   
-  <script>
-  import ApiService from "../services/ApiService"; 
-  import axios from 'axios';
+<script>
+
+import ApiService from "../services/ApiService"; 
+import axios from 'axios';
 
 export default {
   name: 'ReviewPage',
@@ -41,18 +50,47 @@ export default {
   },
   data() {
     return {
+      shoeDetailInfo: null,
+      mainImage: null, 
       productName: "",
       rating: 0.0,
       title: "",
       comment: "",
       reviews: [],
-      successMessage:"",
+      successMessage: "",
+     // isAuthenticated: false // 추가
     };
   },
-  created() {
+  async created() {
+    // 로그인 상태 확인 후, 비회원일 경우 로그인 페이지로 이동
+    //await this.checkAuthentication();
+    await this.getShoeDetailInfo(this.productCode); 
     this.fetchReviews();
   },
   methods: {
+   /* async checkAuthentication() {
+      try {
+        const userInfo = await ApiService.getUserInfo();
+        console.log("User info:", userInfo); 
+        if (userInfo.data && userInfo.data.email) {
+          this.isAuthenticated = true; // 로그인된 상태
+        } else {
+          throw new Error("Not logged in");
+        }
+      } catch (error) {
+        // 로그인되지 않은 경우 로그인 페이지로 이동
+        this.$router.push({ name: "UserLogin" });
+      }
+    },*/
+    async getShoeDetailInfo(productCode) {
+      try {
+        const response = await ApiService.getShoeDetailInfo(productCode);
+        this.shoeDetailInfo = response.data;
+        this.mainImage = this.shoeDetailInfo.images ? this.shoeDetailInfo.images[0] : null;
+      } catch (error) {
+        console.error("Failed to fetch shoe details:", error);
+      }
+    },
     setRating(index) {
       this.rating = index;
     },
@@ -64,8 +102,9 @@ export default {
         console.error("Failed to fetch reviews:", error);
       }
     },
+
     async submitReview() {
-      if (this.comment.length >= 30 && this.title.length > 0 && this.rating > 0) {
+      if (this.comment.length >= 5 && this.title.length > 0 && this.rating > 0) {
         try {
           const reviewInfo = {
             productCode: this.productCode,
@@ -73,14 +112,13 @@ export default {
             title: this.title,
             comment: this.comment
           };
-          console.log("Sending review data: %s , %f, %s, %s", reviewInfo.productCode, reviewInfo.rating, reviewInfo.title, reviewInfo.comment);  //써놓기만 하고 시도를 못해봄 방법을 모르겠어요
           await ApiService.addReview(reviewInfo); 
-          this.successMessage = 'Thank you for sharing your experience!';// 성공메시지 뜨게 해봄
-          
+          this.successMessage = 'Thank you for sharing your experience!';
+
           setTimeout(() => {
-                this.$router.back();
-              }, 1000);
-            
+            this.$router.back();
+          }, 1000);
+          
           this.fetchReviews(); 
           this.resetForm();
         } catch (error) {
@@ -97,7 +135,6 @@ export default {
     }
   }
 };
-
 </script>
 
     <style scoped>
@@ -120,13 +157,14 @@ export default {
     margin-bottom: 20px;
     }
 
-    .rating span {
+    .rating i {
+    font-size: 1em;
     cursor: pointer;
     color: #ccc;
     }
 
-    .rating .filled {
-    color: yellow;
+    .rating i.filled {
+    color:  #FFD700;
     }
 
     .review-form label {

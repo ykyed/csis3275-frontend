@@ -73,7 +73,7 @@ export default {
             title: this.title,
             comment: this.comment
           };
-          console.log("Sending review data:", reviewInfo);  //써놓기만 하고 시도를 못해봄 방법을 모르겠어요
+          console.log("Sending review data: %s , %f, %s, %s", reviewInfo.productCode, reviewInfo.rating, reviewInfo.title, reviewInfo.comment);  //써놓기만 하고 시도를 못해봄 방법을 모르겠어요
           await ApiService.addReview(reviewInfo); 
           this.successMessage = 'Thank you for sharing your experience!';// 성공메시지 뜨게 해봄
           

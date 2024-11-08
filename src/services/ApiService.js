@@ -81,6 +81,11 @@ class ApiService {
 
   addReview(reviewInfo) {
     return http.post("/reviews", reviewInfo);
+    
+  }
+
+  getReviews(productCode) {
+    return http.get(`/reviews/${productCode}`);
   }
 }
 

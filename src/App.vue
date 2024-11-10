@@ -99,6 +99,9 @@ export default {
         userStore.clearUserName();
         userStore.clearUserRole();
 
+        const cartStore = useCartStore();
+        cartStore.clearCartItem();
+
         this.$router.push({ name: 'ShoeList' });
       } catch (error) {
         console.error("Logout failed:", error);

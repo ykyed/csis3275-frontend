@@ -7,15 +7,18 @@
           </button>
         </div>
         <nav class="nav-buttons">
+          <div class="cart-icon-wrapper">
             <button @click="goToCart" class="nav-btn">
                 <img src="@/assets/cart.png" alt="Cart" class="icon" />
             </button>
+            <span v-if="cartItem > 0" class="cart-badge">{{ cartItem }}</span>
+          </div>
             
-            <button @click="goToLogin" class="nav-btn">
-                <img src="@/assets/account.png" alt="Login" class="icon" />
-            </button>
+          <button @click="goToLogin" class="nav-btn">
+              <img src="@/assets/account.png" alt="Login" class="icon" />
+          </button>
 
-            <span v-if="userName" class="user-info">Hi, {{ userName }}</span>
+          <span v-if="userName" class="user-info">Hi, {{ userName }}</span>
         </nav>
     </header>
 
@@ -27,6 +30,7 @@
 import ApiService from "./services/ApiService";
 import http from "./http-common.js";
 import { useUserStore } from './store/user';
+import { useCartStore } from './store/cart';
 
 export default {
   name: 'App',
@@ -35,25 +39,52 @@ export default {
   computed: {
     userName() {
       const userStore = useUserStore();
-      console.log("computed: " + userStore.userName);
+      console.log("computed, userName: " + userStore.userName);
       return userStore.userName;
+    },
+
+    cartItem() {
+      const cartStore = useCartStore();
+      console.log("computed, cartItem: " + cartStore.cartItem);
+      return cartStore.cartItem;
     }
   },
 
   async mounted() {
     const userStore = useUserStore();
-    const response = await ApiService.getUserInfo();
 
-    console.log("mounted: name: " + response.data.name);
+    try {
+      const userInfo = await ApiService.getUserInfo();
 
-    if (response.data.name && response.data.name.length > 0) {
-      userStore.setUserName(response.data.name);
-      userStore.setUserRole(response.data.role);
-    }
-    else {
+      console.log("mounted: name: " + userInfo);
+      console.log("mounted: name: " + userInfo.data.name);
+
+      if (userInfo.data.name && userInfo.data.name.length > 0) {
+        userStore.setUserName(userInfo.data.name);
+        userStore.setUserRole(userInfo.data.role);
+
+        const cartStore = useCartStore();
+        const cartInfo = await ApiService.getCartItemByUser(userInfo.data.username);
+
+        console.log("mounted: cartInfo.length: " + cartInfo.data.length);
+
+        cartStore.setCartItem(cartInfo.data.length);
+        
+      }
+      else {
+        userStore.clearUserName();
+        userStore.clearUserRole();
+      }
+    } catch (error) {
+      console.error("failed:", error);
+
       userStore.clearUserName();
       userStore.clearUserRole();
+
+      this.logout();
     }
+
+    
   },
 
   methods: {
@@ -174,6 +205,28 @@ body {
   filter: invert(100%);
   width: 30px;  
   height: 30px;
+}
+
+.cart-icon-wrapper {
+  position: relative;
+  width: 30px;
+  height: 30px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+  color: black;
+  border-radius: 50%;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transform: translate(80%, -40%);
 }
 
 .user-info {

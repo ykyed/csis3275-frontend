@@ -11,19 +11,23 @@ export const useUserStore = defineStore('user', {
       this.userName = name;
       localStorage.setItem('userName', name);
     },
+
     getUserName() {
       return this.userName;
     },
+
     clearUserName() {
       console.log("clearUserName");
       this.userName = null;
       localStorage.removeItem('userName'); 
     },
+
     setUserRole(role) {
       console.log("setUserRole: " + role);
       this.userRole = role;
       localStorage.setItem('userRole', role);
     },
+    
     clearUserRole() {
       console.log("clearUserRole");
       this.userRole = null;

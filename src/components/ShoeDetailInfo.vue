@@ -88,6 +88,7 @@
 <script>
 import ApiService from "../services/ApiService";
 import '@fortawesome/fontawesome-free/css/all.css';
+import { useCartStore } from '../store/cart';
 
 export default {
     name: "shoeDetailInfo",
@@ -98,7 +99,8 @@ export default {
         loading: true,
         selectedSize: null,  // Track selected size
         shoeSizes: this.generateShoeSizes(6, 13, 0.5), // Create size range from 6 to 13 in 0.5 increments
-        reviews:[]
+        reviews:[],
+        cartInfo: {}
         };
     },
     created() {
@@ -123,34 +125,53 @@ export default {
             this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
         },
 
-        addToCart() {
-            const cartItem = {
-                productCode: this.shoeDetailInfo.productCode,  // Ensure correct productCode
-                productName: this.shoeDetailInfo.name,  // Store product name
-                size: this.selectedSize,
-                quantity: 1, // You can add logic to select the quantity
-                mainImage: this.shoeDetailInfo.images[0],  // Add the main image URL
-            };
+        async addToCart() {
 
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];  // Get existing cart from localStorage
-            
-            // Check if the productCode already exists in the cart
-            const existingItemIndex = cart.findIndex(item => 
-                item.productCode === cartItem.productCode && item.size === cartItem.size
-            );
+            const response = await ApiService.getUserInfo();
+            if (response.data.name && response.data.name.length > 0) {
 
-            if (existingItemIndex !== -1) {
-                // If item already exists, update the quantity
-                cart[existingItemIndex].quantity += cartItem.quantity;
-                alert("Item updated in the cart!");
-            } else {
-                // If item does not exist, add new item to the cart
-                cart.push(cartItem);
-                alert("Item added to the cart!");
+                const cartInfo = {};
+                cartInfo.userEmail = response.data.username;
+                cartInfo.productCode = this.shoeDetailInfo.productCode;
+                cartInfo.size = this.selectedSize;
+                cartInfo.quantity = 1;
+                
+                await ApiService.addCartItem(cartInfo);
+
+                const cartInfos = await ApiService.getCartItemByUser(response.data.username);
+                const cartStore = useCartStore();
+                cartStore.setCartItem(cartInfos.data.length);
+                
             }
+            else {
+                this.$router.push({ name: 'UserLogin' });
+            }
+            // const cartItem = {
+            //     productCode: this.shoeDetailInfo.productCode, 
+            //     userEmail: ,
+            //     size: this.selectedSize,
+            //     quantity: 1,
+            // };
 
-            // Save updated cart back to localStorage
-            localStorage.setItem('cart', JSON.stringify(cart));
+            // let cart = JSON.parse(localStorage.getItem('cart')) || [];  // Get existing cart from localStorage
+            
+            // // Check if the productCode already exists in the cart
+            // const existingItemIndex = cart.findIndex(item => 
+            //     item.productCode === cartItem.productCode && item.size === cartItem.size
+            // );
+
+            // if (existingItemIndex !== -1) {
+            //     // If item already exists, update the quantity
+            //     cart[existingItemIndex].quantity += cartItem.quantity;
+            //     alert("Item updated in the cart!");
+            // } else {
+            //     // If item does not exist, add new item to the cart
+            //     cart.push(cartItem);
+            //     alert("Item added to the cart!");
+            // }
+
+            // // Save updated cart back to localStorage
+            // localStorage.setItem('cart', JSON.stringify(cart));
         },
 
 

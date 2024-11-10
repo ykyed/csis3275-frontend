@@ -82,6 +82,26 @@ class ApiService {
   addReview(reviewInfo) {
     return http.post("/reviews", reviewInfo);
   }
+
+  getCartItemByUser(userEmail) {
+    return http.get(`/cart/${userEmail}`);
+  }
+
+  addCartItem(CartItem) {
+    return http.post("/cart", CartItem);
+  }
+
+  updateCartItem(CartItem) {
+    return http.put("/cart", CartItem);
+  }
+
+  deleteCartItem(id) {
+    return http.delete(`/cart/${id}`)
+  }
+
+  deleteCartItems(userEmail) {
+    return http.delete(`/cart/user/${userEmail}`)
+  }
 }
 
 

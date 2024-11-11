@@ -67,19 +67,25 @@
                 <div class="card" v-for="shoe in filteredShoeList" :key="shoe.productCode">
                     <div @click="viewDetailInfo(shoe.productCode)">
                         <img :src="shoe.thumbnail" alt="Shoe Image" class="shoe-image" />
-                            <div class="card-content">
-                                <p class="card-content-title">{{ shoe.title }}</p>
-                                <p class="card-content-price">${{ shoe.price }}</p>
-                                <div class="rating-container">
-                                    <div class="rating-bar">
-                                        
-                                        <span v-for="star in 5" :key="star" class="star"  :style="getStarStyle(shoe.rating, star)">
-                                        ★
-                                        </span>
-                                    </div>
-                                    <span v-if="shoe.reviewCount > 0" class="review-count">({{ shoe.reviewCount }})</span>
+                        <div class="card-content">
+                            <p class="card-content-title">{{ shoe.title }}</p>
+                            <p class="card-content-price">${{ shoe.price }}</p>
+                            <div class="rating-container">
+                                <div class="rating-bar">
+                                    <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(shoe.rating, star)">
+                                        <defs>
+                                            <linearGradient :id="`grad-${shoe.productCode}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stop-color="rgb(249, 216, 73)" />
+                                                <stop :offset="Math.max((shoe.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                                <stop :offset="Math.max((shoe.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path :fill="`url(#grad-${shoe.productCode}-${star})`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                                    </svg>
                                 </div>
+                                <span v-if="shoe.reviewCount > 0" class="review-count">({{ shoe.reviewCount }})</span>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -199,12 +205,14 @@ export default {
         },
 
         getStarStyle(rating, star) {
+            console.log("getStarStyle, rating : " + rating);
             if (star <= Math.floor(rating)) {
-                return { color: 'rgb(215, 187, 29)' };
+                return { fill: 'rgb(249, 216, 73)' };
             } else if (star === Math.ceil(rating)) {
                 const percentage = (rating % 1) * 100;
                 return {
-                    background: `linear-gradient(90deg,  rgb(215, 187, 29)  ${percentage}%, white ${percentage}%)`,
+                    fill: `url(#grad${star})`,
+                    background: `linear-gradient(90deg,  rgb(249, 216, 73)  ${percentage}%, white ${percentage}%)`,
                     'background-clip': 'text',
                     color: 'transparent'
                 };
@@ -330,14 +338,24 @@ export default {
     font-weight: bolder;
 }
 
-.star {
+/* .star {
     font-size: 12px;
     color: transparent;
-}
+} */
 
 .rating-container {
     display: flex;
     align-items: center; 
+}
+
+.rating-bar {
+  display: flex;
+}
+
+.star-svg {
+  width: 12px;
+  height: 12px;
+
 }
 
 .review-count {

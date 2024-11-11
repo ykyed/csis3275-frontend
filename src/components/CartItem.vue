@@ -28,7 +28,7 @@
             <button class="change-quantity" @click="increaseQuantity(item)">+</button>
           </div>
           <div class="price">${{ item.price }}</div>
-          <button @click="removeItem(item.id)" class="remove-button">✕</button>
+          <button @click="removeItem(item)" class="remove-button">✕</button>
        </div>
       </div>
 
@@ -159,9 +159,12 @@ export default {
         });
     },
 
-    async removeItem(id) {
-      await ApiService.deleteCartItem(id);
-      this.cartItems = this.cartItems.filter(item => item.id !== id);
+    async removeItem(currentItem) {
+
+      this.totalPrice -= (currentItem.price * currentItem.quantity);
+      
+      await ApiService.deleteCartItem(currentItem.id);
+      this.cartItems = this.cartItems.filter(item => item.id !== currentItem.id);
 
       const cartStore = useCartStore()
       cartStore.setCartItem(this.cartItems.length);
@@ -193,7 +196,7 @@ export default {
         item.quantity = item.quantity - 1;
 
         if (item.quantity === 0) {
-          this.removeItem(item.id);
+          this.removeItem(item);
         }
     },
 
@@ -255,7 +258,7 @@ export default {
 
 .cart-item {
   display: grid;
-  grid-template-columns: 100px 1fr 100px 100px 100px;
+  grid-template-columns: 100px 1fr 15% 15% 15%;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #e0e0e0;
@@ -264,7 +267,7 @@ export default {
 
 .cart-header {
   display: grid;
-  grid-template-columns: 100px 1fr 100px 100px 100px;
+  grid-template-columns: 100px 1fr 15% 15% 15%;
   align-items: center;
   padding: 10px 0;
   font-weight: bold;
@@ -279,6 +282,7 @@ export default {
 
 .remove-all {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .cart-item-image {
@@ -290,7 +294,7 @@ export default {
 .product-details {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  text-align: start;
 }
 
 .quantity {
@@ -321,7 +325,8 @@ export default {
 }
 
 .checkout-section {
-  width: 40%;
+  width: 30%;
+  height: 250px;
   background-color: #f9f9f9;
   margin-top: 60px;
 }
@@ -363,6 +368,7 @@ export default {
   background-color: black;
   color: white;
   border: none;
+  border-radius: 5px;
 }
 
 .divider {
@@ -400,6 +406,7 @@ export default {
   cursor: pointer;
   justify-content: center;
   align-items: center;
-  text-align: center
+  text-align: center;
+  border-radius: 5px;
 }
 </style>

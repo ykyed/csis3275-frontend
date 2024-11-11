@@ -2,15 +2,27 @@
     <div>
         <div>
             <!-- Shoe Information -->
-            <div v-if="shoeDetailInfo">
+            <div v-if="!loading">
+            
                 <h2>{{ shoeDetailInfo.name }}</h2>
                 <p>Price: ${{ shoeDetailInfo.price }}</p>
 
-                <!-- Rating as Stars -->
-                <div class="rating">
-                    <i v-for="n in 5" :key="n" class="fas" :class="n <= Math.floor(shoeDetailInfo.rating) ? 'fa-star' : 'fa-star-half-alt'"></i>
-                    <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
+                <div class="rating-container">
+                    <div class="rating-bar">
+                        <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(shoeDetailInfo.rating, star)">
+                            <defs>
+                                <linearGradient :id="'grad' + star" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="rgb(249, 216, 73)" />
+                                    <stop :offset="Math.max((shoeDetailInfo.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                    <stop :offset="Math.max((shoeDetailInfo.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                </linearGradient>
+                            </defs>
+                            <path :fill="'url(#grad' + star + ')'" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                        </svg>
+                    </div>
                 </div>
+
+                <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
 
                 <!-- Main Shoe Image -->
                 <div v-if="shoeDetailInfo && shoeDetailInfo.images && shoeDetailInfo.images.length">
@@ -49,7 +61,7 @@
 
                 <!-- Add to Cart Button -->
                 <div>
-                    <button :disabled="!selectedSize" @click="addToCart" class="add-to-cart-button">
+                    <button :disabled="!selectedSize" @click="addToCart" class="add-to-cart-button" :class="{ 'hover-enabled': selectedSize }" >
                         Add to Cart
                     </button>
                 </div>
@@ -76,11 +88,6 @@
                 </div>
 
             </div>
-
-            <!-- Loading Message -->
-            <div v-else-if="loading">
-                <p>Loading...</p>
-            </div>
         </div>
     </div>
 </template>
@@ -91,7 +98,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { useCartStore } from '../store/cart';
 
 export default {
-    name: "shoeDetailInfo",
+    name: "ShoeDetailInfo",
     data() {
         return {
         shoeDetailInfo: {},
@@ -120,6 +127,7 @@ export default {
                     console.log(e.response.data);
                 });
         },
+
         writeAReview(){
             //this.$router.push('/reviews'); // review 페이지로 이동
             this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
@@ -202,9 +210,24 @@ export default {
         // Handle size selection
         selectSize(size) {
             this.selectedSize = size;  // Mark selected size
-        }
+        },
 
-        
+        getStarStyle(rating, star) {
+            console.log("getStarStyle, rating" + rating);
+            if (star <= Math.floor(rating)) {
+                return { fill: 'rgb(249, 216, 73)' };
+            } else if (star === Math.ceil(rating)) {
+                const percentage = (rating % 1) * 100;
+                return {
+                    fill: `url(#grad${star})`,
+                    background: `linear-gradient(90deg,  rgb(249, 216, 73)  ${percentage}%, white ${percentage}%)`,
+                    'background-clip': 'text',
+                    color: 'transparent'
+                };
+            } else {
+                return { color: 'transparent' };
+            }
+        } 
     }
 };
 
@@ -240,19 +263,6 @@ export default {
 
 .thumbnail-image:hover {
     transform: scale(1.1);
-}
-
-/* Rating (Yellow Stars) Styling */
-.rating {
-    display: center;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-.rating i {
-    color: #FFD700; /* Yellow color for stars */
-    font-size: 20px;
 }
 
 /* Styling for Size Selection Grid */
@@ -297,9 +307,22 @@ button:disabled {
 
 .add-to-cart-button {
     margin-top: 30px;
-    font-size: 15px;
-    padding: 10px 15px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
+
+.add-to-cart-button.hover-enabled:hover {
+    background-color: #ccc;
+    color: black;
+  }
 
 .divider {
     margin: 20px 0;
@@ -316,7 +339,35 @@ button:disabled {
 
 .review-button {
     margin: 20px;
-    font-size: 15px;
-    padding: 10px 15px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.review-button:hover {
+    background-color: #ccc;
+    color: black;
+  }
+
+.rating-container {
+    display: flex;
+    justify-content: center;
+}
+
+.rating-bar {
+  display: flex;
+}
+
+.star-svg {
+  width: 30px;
+  height: 30px;
+
 }
 </style>

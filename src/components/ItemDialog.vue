@@ -194,7 +194,7 @@
     border: none;
     cursor: pointer;
     font-size: 0.9rem;
-    border-radius: 3px;
+    border-radius: 5px;
     margin-left: 10px;
   }
   

@@ -161,7 +161,10 @@
 
   .signup-btn {
     width: 40%;
-    padding: 0.8rem;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     font-size: 1rem;
     background-color: black;
     color: white;
@@ -172,7 +175,8 @@
   }
 
   .signup-btn:hover {
-    background-color: #0056b3;
+    background-color: #ccc;
+    color: black;
   }
 
   .success,

@@ -1,89 +1,91 @@
-<template>
+<template>  
+    <div class="shoe-list-wrapper">
 
     <div class="shoe-count">
         Total Shoes: {{ filteredShoeList.length }}
     </div>
 
-    <div class="main-container">
+        <div class="main-container">
 
-        <div class="shoeList">
+            <div class="shoeList">
 
-            <div class="filter-container">
+                <div class="filter-container">
 
-                <div class="dropdown">
-                    <button @click="toggleDropdown('brandDropdown')" class="dropdown-btn">
-                        Brand
-                        <span class="dropdownicon">{{ showDropdowns.brandDropdown ? '-' : '+' }}</span>
-                    </button>
-                    <div v-if="showDropdowns.brandDropdown" class="dropdown-content">
-                        <label v-for="brand in brands" :key="brand">
-                            <input type="checkbox" :value="brand" v-model="selectedBrands"  @change="applyFilters"/> {{ brand }}
-                        </label>
+                    <div class="dropdown">
+                        <button @click="toggleDropdown('brandDropdown')" class="dropdown-btn">
+                            Brand
+                            <span class="dropdownicon">{{ showDropdowns.brandDropdown ? '-' : '+' }}</span>
+                        </button>
+                        <div v-if="showDropdowns.brandDropdown" class="dropdown-content">
+                            <label v-for="brand in brands" :key="brand">
+                                <input type="checkbox" :value="brand" v-model="selectedBrands"  @change="applyFilters"/> {{ brand }}
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <button @click="toggleDropdown('styleDropdown')" class="dropdown-btn">
+                            Style
+                            <span class="dropdownicon">{{ showDropdowns.styleDropdown ? '-' : '+' }}</span>
+                        </button>
+                        <div v-if="showDropdowns.styleDropdown" class="dropdown-content">
+                            <label v-for="style in styles" :key="style">
+                                <input type="checkbox" :value="style" v-model="selectedStyles"  @change="applyFilters"/> {{ style }}
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <button @click="toggleDropdown('colorDropdown')" class="dropdown-btn">
+                            Color
+                            <span class="dropdownicon">{{ showDropdowns.colorDropdown ? '-' : '+' }}</span>
+                        </button>
+                        <div v-if="showDropdowns.colorDropdown" class="dropdown-content">
+                            <label v-for="color in colors" :key="color">
+                                <input type="checkbox" :value="color" v-model="selectedColors"  @change="applyFilters"/> {{ color }}
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <button @click="toggleDropdown('sizeDropdown')" class="dropdown-btn">
+                            Size
+                            <span class="dropdownicon">{{ showDropdowns.sizeDropdown ? '-' : '+' }}</span>
+                        </button>
+                        <div v-if="showDropdowns.sizeDropdown" class="dropdown-content">
+                            <label v-for="size in sizes" :key="size">
+                                <input type="checkbox" :value="size" v-model="selectedSizes"  @change="applyFilters"/> {{ size }}
+                            </label>
+                        </div>
+
+                        <hr>
                     </div>
-
-                    <hr>
-
-                    <button @click="toggleDropdown('styleDropdown')" class="dropdown-btn">
-                        Style
-                        <span class="dropdownicon">{{ showDropdowns.styleDropdown ? '-' : '+' }}</span>
-                    </button>
-                    <div v-if="showDropdowns.styleDropdown" class="dropdown-content">
-                        <label v-for="style in styles" :key="style">
-                            <input type="checkbox" :value="style" v-model="selectedStyles"  @change="applyFilters"/> {{ style }}
-                        </label>
-                    </div>
-
-                    <hr>
-
-                    <button @click="toggleDropdown('colorDropdown')" class="dropdown-btn">
-                        Color
-                        <span class="dropdownicon">{{ showDropdowns.colorDropdown ? '-' : '+' }}</span>
-                    </button>
-                    <div v-if="showDropdowns.colorDropdown" class="dropdown-content">
-                        <label v-for="color in colors" :key="color">
-                            <input type="checkbox" :value="color" v-model="selectedColors"  @change="applyFilters"/> {{ color }}
-                        </label>
-                    </div>
-
-                    <hr>
-
-                    <button @click="toggleDropdown('sizeDropdown')" class="dropdown-btn">
-                        Size
-                        <span class="dropdownicon">{{ showDropdowns.sizeDropdown ? '-' : '+' }}</span>
-                    </button>
-                    <div v-if="showDropdowns.sizeDropdown" class="dropdown-content">
-                        <label v-for="size in sizes" :key="size">
-                            <input type="checkbox" :value="size" v-model="selectedSizes"  @change="applyFilters"/> {{ size }}
-                        </label>
-                    </div>
-
-                    <hr>
                 </div>
-            </div>
 
-            <div v-if="loading" class="card-container">Loading...</div>
-            <div v-else class="card-container">
-        
-                <div class="card" v-for="shoe in filteredShoeList" :key="shoe.productCode">
-                    <div @click="viewDetailInfo(shoe.productCode)">
-                        <img :src="shoe.thumbnail" alt="Shoe Image" class="shoe-image" />
-                        <div class="card-content">
-                            <p class="card-content-title">{{ shoe.title }}</p>
-                            <p class="card-content-price">${{ shoe.price }}</p>
-                            <div class="rating-container">
-                                <div class="rating-bar">
-                                    <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(shoe.rating, star)">
-                                        <defs>
-                                            <linearGradient :id="`grad-${shoe.productCode}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                <stop offset="0%" stop-color="rgb(249, 216, 73)" />
-                                                <stop :offset="Math.max((shoe.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
-                                                <stop :offset="Math.max((shoe.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
-                                            </linearGradient>
-                                        </defs>
-                                        <path :fill="`url(#grad-${shoe.productCode}-${star})`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
-                                    </svg>
+                <div v-if="loading" class="card-container">Loading...</div>
+                <div v-else class="card-container">
+            
+                    <div class="card" v-for="shoe in filteredShoeList" :key="shoe.productCode">
+                        <div @click="viewDetailInfo(shoe.productCode)">
+                            <img :src="shoe.thumbnail" alt="Shoe Image" class="shoe-image" />
+                            <div class="card-content">
+                                <p class="card-content-title">{{ shoe.title }}</p>
+                                <p class="card-content-price">${{ shoe.price }}</p>
+                                <div class="rating-container">
+                                    <div class="rating-bar">
+                                        <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(shoe.rating, star)">
+                                            <defs>
+                                                <linearGradient :id="`grad-${shoe.productCode}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                    <stop offset="0%" stop-color="rgb(249, 216, 73)" />
+                                                    <stop :offset="Math.max((shoe.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                                    <stop :offset="Math.max((shoe.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                                </linearGradient>
+                                            </defs>
+                                            <path :fill="`url(#grad-${shoe.productCode}-${star})`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                                        </svg>
+                                    </div>
+                                    <span v-if="shoe.reviewCount > 0" class="review-count">({{ shoe.reviewCount }})</span>
                                 </div>
-                                <span v-if="shoe.reviewCount > 0" class="review-count">({{ shoe.reviewCount }})</span>
                             </div>
                         </div>
                     </div>

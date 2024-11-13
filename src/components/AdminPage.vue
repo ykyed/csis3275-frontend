@@ -214,7 +214,12 @@ export default {
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
-  border-radius: 3px;
+  border-radius: 5px;
+}
+
+.add-item-btn:hover {
+  background-color: #ccc;
+  color: black;
 }
 
 .btn {
@@ -224,10 +229,16 @@ export default {
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
-  border-radius: 3px;
+  border-radius: 5px;
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.btn:hover {
+  background-color: #ccc;
+  color: black;
+}
+
 
 h1 {
   text-align: center;
@@ -255,10 +266,6 @@ h1 {
 
 .table tr:nth-child(even) {
   background-color: #f9f9f9;
-}
-
-.table tr:hover {
-  background-color: #ddd;
 }
 
 .table td {

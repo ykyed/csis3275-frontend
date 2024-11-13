@@ -1,158 +1,244 @@
 <template>
-    <div>
-        <div>
-            <!-- Shoe Information -->
-            <div v-if="shoeDetailInfo">
-                <h2>{{ shoeDetailInfo.name }}</h2>
+    <div class="shoe-detail-wrapper">
+        <div class="shoe-detail-container">
+            <!-- Image Section -->
+            <div class="image-section">
+                <div class="main-image-container">
+                    <img :src="mainImage" alt="Main Shoe Image" class="main-shoe-image"/>
+                </div>
+                <div class="thumbnail-container">
+                    <img 
+                        v-for="(image, index) in shoeDetailInfo.images.slice(0)" 
+                        :key="index" 
+                        :src="image" 
+                        alt="Shoe Thumbnail" 
+                        class="thumbnail-image"
+                        @click="setMainImage(image)" />
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="info-section" v-if="!loading">
+                <h2>{{ shoeDetailInfo.title }}</h2>
                 <p>Price: ${{ shoeDetailInfo.price }}</p>
 
-                <!-- Rating as Stars -->
-                <div class="rating">
-                    <i v-for="n in 5" :key="n" class="fas" :class="n <= Math.floor(shoeDetailInfo.rating) ? 'fa-star' : 'fa-star-half-alt'"></i>
-                    <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
-                </div>
-
-                <!-- Main Shoe Image -->
-                <div v-if="shoeDetailInfo && shoeDetailInfo.images && shoeDetailInfo.images.length">
-                    <div class="main-image-container">
-                        <img :src="mainImage" alt="Main Shoe Image" class="main-shoe-image"/>
-                    </div>
-                    <!-- Thumbnails -->
-                    <div class="thumbnail-container">
-                        <img 
-                            v-for="(image, index) in shoeDetailInfo.images.slice(1)" 
-                            :key="index" 
-                            :src="image" 
-                            alt="Shoe Thumbnail" 
-                            class="thumbnail-image"
-                            @click="setMainImage(image)"/> <!-- Thumbnail click handler -->
+                <div class="rating-container">
+                    <div class="rating-bar">
+                        <div class="stars">
+                            <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(shoeDetailInfo.rating, star)">
+                                <defs>
+                                    <linearGradient :id="'grad' + star" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="rgb(249, 216, 73)" />
+                                        <stop :offset="Math.max((shoeDetailInfo.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                        <stop :offset="Math.max((shoeDetailInfo.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                    </linearGradient>
+                                </defs>
+                                <path :fill="'url(#grad' + star + ')'" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <div v-else>
-                    <p>No images available</p>
-                </div>
-                
+                <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
+
                 <!-- Size Selection -->
                 <div class="sizes-grid">
-                    <p>Select Size:</p>
+                    <h3>Select Size:</h3>
                     <div class="grid-container">
                         <button 
-                            v-for="(size, index) in shoeSizes" 
-                            :key="index" 
-                            @click="selectSize(size)" 
-                            :class="{ selected: selectedSize === size }">
-                            {{ size }}
+                        v-for="(size, index) in shoeSizes" 
+                        :key="index" 
+                        @click="selectSize(size)" 
+                        :class="{ selected: selectedSize === size }">
+                        {{ size }} <!-- 사이즈만 출력 -->
                         </button>
                     </div>
                 </div>
 
                 <!-- Add to Cart Button -->
                 <div>
-                    <button :disabled="!selectedSize" @click="addToCart" class="add-to-cart-button">
+                    <button :disabled="!selectedSize" @click="addToCart" class="add-to-cart-button" :class="{ 'hover-enabled': selectedSize }">
                         Add to Cart
                     </button>
                 </div>
-
-                <hr class="divider">
-                <!-- Display Reviews -->
-                <div v-if="reviews.length">
-                    <h3>Customer Reviews</h3>
-                    <div v-for="(review, index) in reviews" :key="index" class="review">
-                        <h4>{{ review.title }}</h4>
-                        <p>Rating: {{ review.rating }} / 5</p>
-                        <p>{{ review.comment }}</p>
-                    </div>
-                </div>
-                <div v-else>
-                    <p>No reviews available for this product.</p>
-                </div>
-
-                <!-- Add to Write A Review Button -->
-                <div>
-                    <button @click="writeAReview" class="review-button">
-                        Write a review
-                    </button>
-                </div>
-
-            </div>
-
-            <!-- Loading Message -->
-            <div v-else-if="loading">
-                <p>Loading...</p>
             </div>
         </div>
-    </div>
+
+        <!-- Review Section -->
+        <div v-if="reviews.length">
+            <h3>Customer Reviews</h3>
+            
+            <div class="review" v-if="reviews.length > 0">
+            <h4>{{ reviews[0].title }}</h4>
+            <div class="rating-container">
+                <div class="rating-bar">
+                    <div class="stars">
+                        <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(reviews[0].rating, star)">
+                            <defs>
+                                <linearGradient :id="'grad' + star" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="rgb(249, 216, 73)" />
+                                    <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                    <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                </linearGradient>
+                            </defs>
+                            <path :fill="'url(#grad' + star + ')'" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
+            <p>{{ reviews[0].comment }}</p>
+        </div>
+
+        <!-- Show more reviews if button clicked -->
+            <div v-show="showMoreReviews">
+                <div v-for="(review, index) in reviews.slice(1)" :key="index" class="review">
+                    <h4>{{ review.title }}</h4>
+                    <div class="rating-container">
+                        <div class="rating-bar">
+                            <div class="stars">
+                                <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(review.rating, star)">
+                                    <defs>
+                                        <linearGradient :id="'grad' + star" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="rgb(249, 216, 73)" />
+                                            <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                            <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                        </linearGradient>
+                                    </defs>
+                                    <path :fill="'url(#grad' + star + ')'" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Rating: {{ review.rating }} / 5</p>
+                    <p>{{ review.comment }}</p>
+                </div>
+            </div>
+            <!-- Show More / Show Less Button -->
+            <button v-if="reviews.length > 1" @click="toggleMoreReviews" class="more-reviews-button">
+                {{ showMoreReviews ? 'Show Less' : 'Show More' }}
+            </button>
+        </div>
+
+        <div v-else>
+            <p>No reviews available for this product.</p>
+        </div>
+
+        <!-- Review Button -->
+        <div>
+            <button @click="writeAReview" class="review-button">
+                Write a review
+            </button>
+        </div> 
+    </div>        
 </template>
 
 <script>
 import ApiService from "../services/ApiService";
 import '@fortawesome/fontawesome-free/css/all.css';
+import { useCartStore } from '../store/cart';
 
 export default {
-    name: "shoeDetailInfo",
+    name: "ShoeDetailInfo",
     data() {
         return {
-        shoeDetailInfo: {},
+        shoeDetailInfo: {
+            images: []  // Initialize images as an empty array
+        },
+        rating: 0.0,
         mainImage: null,
         loading: true,
         selectedSize: null,  // Track selected size
-        shoeSizes: this.generateShoeSizes(6, 13, 0.5), // Create size range from 6 to 13 in 0.5 increments
-        reviews:[]
+        shoeSizes: [],
+        reviews:[],
+        showMoreReviews: false,
+        cartInfo: {}
         };
     },
     created() {
         const productcode = this.$route.params.productCode;
         this.getShoeDetailInfo(productcode);
         this.fetchReviews();
+        this.fetchShoeSizes(productcode);
     },
     methods: {
+        //  // Add size to the product
+        // addSize(productCode, sizeInfo) {
+        //     ApiService.addSizes(productCode, sizeInfo)
+        //     .then(response => {
+        //         console.log('Size added successfully:', response);
+        //         this.fetchShoeSizes(productCode);  // Refresh the sizes list
+        //     })
+        //     .catch(error => {
+        //         console.error("Error adding size:", error);
+        //     });
+        // },
+
+        // // Update existing sizes for the product
+        // updateSize(productCode, sizeInfo) {
+        //     ApiService.updateSizes(productCode, sizeInfo)
+        //     .then(response => {
+        //         console.log('Size updated successfully:', response);
+        //         this.fetchShoeSizes(productCode);  // Refresh the sizes list
+        //     })
+        //     .catch(error => {
+        //         console.error("Error updating size:", error);
+        //     });
+        // },
+
+        fetchShoeSizes(productCode) {
+            ApiService.getSizeByProductCode(productCode)
+            .then(response => {
+                this.shoeSizes = response.data;
+            })
+            .catch(error => {
+                console.error("Error fetching shoe sizes:", error);
+            });
+        },
+
+        toggleMoreReviews() {
+        this.showMoreReviews = !this.showMoreReviews; // Toggle visibility of additional reviews
+        },
+
         getShoeDetailInfo(productcode) {
             ApiService.getShoeDetailInfo(productcode)
                 .then(response => {
                     this.shoeDetailInfo = response.data;
-                    this.mainImage = this.shoeDetailInfo.images[0]; // 첫 번째 이미지를 기본 메인 이미지로 설정
+                    this.mainImage = this.shoeDetailInfo.images[0];
                     this.loading = false;
                 })
                 .catch(e => {
                     console.log(e.response.data);
                 });
         },
+
         writeAReview(){
             //this.$router.push('/reviews'); // review 페이지로 이동
             this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
         },
 
-        addToCart() {
-            const cartItem = {
-                productCode: this.shoeDetailInfo.productCode,  // Ensure correct productCode
-                productName: this.shoeDetailInfo.name,  // Store product name
-                size: this.selectedSize,
-                quantity: 1, // You can add logic to select the quantity
-                mainImage: this.shoeDetailInfo.images[0],  // Add the main image URL
-            };
+        async addToCart() {
 
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];  // Get existing cart from localStorage
-            
-            // Check if the productCode already exists in the cart
-            const existingItemIndex = cart.findIndex(item => 
-                item.productCode === cartItem.productCode && item.size === cartItem.size
-            );
+            const response = await ApiService.getUserInfo();
+            if (response.data.name && response.data.name.length > 0) {
 
-            if (existingItemIndex !== -1) {
-                // If item already exists, update the quantity
-                cart[existingItemIndex].quantity += cartItem.quantity;
-                alert("Item updated in the cart!");
-            } else {
-                // If item does not exist, add new item to the cart
-                cart.push(cartItem);
-                alert("Item added to the cart!");
+                const cartInfo = {};
+                cartInfo.userEmail = response.data.username;
+                cartInfo.productCode = this.shoeDetailInfo.productCode;
+                cartInfo.size = this.selectedSize;
+                cartInfo.quantity = 1;
+                
+                await ApiService.addCartItem(cartInfo);
+
+                const cartInfos = await ApiService.getCartItemByUser(response.data.username);
+                const cartStore = useCartStore();
+                cartStore.setCartItem(cartInfos.data.length);
+                
             }
-
-            // Save updated cart back to localStorage
-            localStorage.setItem('cart', JSON.stringify(cart));
+            else {
+                this.$router.push({ name: 'UserLogin' });
+            }
         },
-
 
         fetchReviews() {
             const productCode = this.$route.params.productCode;
@@ -181,16 +267,50 @@ export default {
         // Handle size selection
         selectSize(size) {
             this.selectedSize = size;  // Mark selected size
-        }
+        },
 
-        
+        getStarStyle(rating, star) {
+            console.log("getStarStyle, rating" + rating);
+            if (star <= Math.floor(rating)) {
+                return { fill: 'rgb(249, 216, 73)' };
+            } else if (star === Math.ceil(rating)) {
+                const percentage = (rating % 1) * 100;
+                return {
+                    fill: `url(#grad${star})`,
+                    background: `linear-gradient(90deg,  rgb(249, 216, 73)  ${percentage}%, white ${percentage}%)`,
+                    'background-clip': 'text',
+                    color: 'transparent'
+                };
+            } else {
+                return { color: 'transparent' };
+            }
+        } 
     }
 };
 
 </script>
 
 <style scoped>
-/* Styling for Main Shoe Image and Thumbnails */
+.shoe-detail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    margin-top: 10px;
+}
+
+.image-section, .info-section {
+    flex: 0 0 20%;
+}
+
+.image-section {
+    margin-right: 20px;
+}
+
+.info-section {
+    margin-left: 20px;
+}
+
 .main-image-container {
     text-align: center;
     margin-bottom: 20px;
@@ -210,7 +330,7 @@ export default {
 }
 
 .thumbnail-image {
-    width: 100px;
+    width: 70px;
     height: auto;
     cursor: pointer;
     border: 1px solid #ddd;
@@ -219,19 +339,6 @@ export default {
 
 .thumbnail-image:hover {
     transform: scale(1.1);
-}
-
-/* Rating (Yellow Stars) Styling */
-.rating {
-    display: center;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-.rating i {
-    color: #FFD700; /* Yellow color for stars */
-    font-size: 20px;
 }
 
 /* Styling for Size Selection Grid */
@@ -276,8 +383,21 @@ button:disabled {
 
 .add-to-cart-button {
     margin-top: 30px;
-    font-size: 15px;
-    padding: 10px 15px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-to-cart-button.hover-enabled:hover {
+    background-color: #ccc;
+    color: black;
 }
 
 .divider {
@@ -293,9 +413,67 @@ button:disabled {
     border-radius: 5px;
 }
 
+.more-reviews-button {
+    margin: 2px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 0.6rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.more-review-button:hover {
+    background-color: #ccc;
+    color: black;
+}
+
 .review-button {
     margin: 20px;
-    font-size: 15px;
-    padding: 10px 15px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.review-button:hover {
+    background-color: #ccc;
+    color: black;
+}
+
+.rating-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+}
+
+.stars {
+    display: flex;
+}
+
+.star-svg {
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}
+
+.rating-number {
+    font-size: 16px;
+    margin-left: 10px;
 }
 </style>

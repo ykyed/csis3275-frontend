@@ -12,13 +12,12 @@
       </div>
     </div>
     
-      
+
       <div class="rating">
-        <i v-for="n in 5" :key="n" class="fas" 
-          :class="n <= rating ? 'fa-star filled' : 'fa-star'"
-          @click="setRating(n)"></i>
-      </div>
-      
+          <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :class="{ filled: star <= rating }" @click="setRating(star)">
+              <path d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+          </svg>
+      </div>      
 
       <div class="review-form">
         <label for="review-title">Review title</label>
@@ -158,22 +157,16 @@ export default {
     margin-bottom: 20px;
     }
 
-    .rating {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    font-size: 2em;
-    margin-bottom: 20px;
+    .star-svg {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      fill: #ccc;
+      transition: fill 0.3s ease;
     }
 
-    .rating i {
-    font-size: 1em;
-    cursor: pointer;
-    color: #ccc;
-    }
-
-    .rating i.filled {
-    color:  #FFD700;
+    .star-svg.filled {
+      fill: rgb(249, 216, 73);
     }
 
     .review-form label {
@@ -191,15 +184,22 @@ export default {
     }
 
     button {
-    padding: 10px 20px;
-    border: none;
-    background-color: black;
-    color: white;
-    cursor: pointer;
+      padding-top: 0.7rem;
+      padding-bottom: 0.7rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      font-size: 1rem;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
     }
 
     button:hover {
-    background-color: #0056b3;
+      background-color: #ccc;
+      color: black;
     }
 
   .success-message {

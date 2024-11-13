@@ -52,7 +52,11 @@ class ApiService {
   }
 
   getUserInfo() {
-    return http.get("/userinfo");
+    return http.get("/userinfo",{
+      header: {
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      }
+    });
   }
 
   addItem(shoeInfo) {

@@ -112,6 +112,15 @@ export default {
             title: this.title,
             comment: this.comment
           };
+        
+          console.log("Sending review data:", reviewInfo);
+          // 인증 헤더 추가
+         /* const config = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('authToken')}` // 저장된 토큰을 가져와서 사용
+            }
+          };*/
+          
           await ApiService.addReview(reviewInfo); 
           this.successMessage = 'Thank you for sharing your experience!';
 

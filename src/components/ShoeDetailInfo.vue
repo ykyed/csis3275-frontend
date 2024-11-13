@@ -46,11 +46,12 @@
                     <h3>Select Size:</h3>
                     <div class="grid-container">
                         <button 
-                        v-for="(size, index) in shoeSizes" 
+                        v-for="(sizeInfo, index) in shoeSizes" 
                         :key="index" 
-                        @click="selectSize(size)" 
-                        :class="{ selected: selectedSize === size }">
-                        {{ size }} <!-- 사이즈만 출력 -->
+                        @click="selectSize(sizeInfo.size)" 
+                        :class="{ selected: selectedSize === sizeInfo.size }"
+                        :disabled="sizeInfo.quantity == 0">
+                        {{ sizeInfo.size }} <!-- 사이즈만 출력 -->
                         </button>
                     </div>
                 </div>
@@ -86,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
+            <p>Rating: {{ reviews[0].rating }} / 5</p>
             <p>{{ reviews[0].comment }}</p>
         </div>
 
@@ -321,6 +322,7 @@ export default {
     max-width: 500px;
     height: auto;
     border: 2px solid #ccc;
+    border-radius: 5px;
 }
 
 .thumbnail-container {
@@ -335,6 +337,7 @@ export default {
     cursor: pointer;
     border: 1px solid #ddd;
     transition: transform 0.2s ease-in-out;
+    border-radius: 5px;
 }
 
 .thumbnail-image:hover {
@@ -362,6 +365,7 @@ export default {
     height: 40px; /* Set a fixed height */
     background-color: #eee;
     border: 1px solid #ccc;
+    border-radius: 5px;
     cursor: pointer;
     text-align: center;
     font-size: 16px;  /* Increase font size for better visibility */
@@ -372,7 +376,8 @@ export default {
 }
 
 .grid-container button.selected {
-    background-color: #007bff; /* Highlight selected size */
+    border-radius: 5px;
+    background-color: black; /* Highlight selected size */
     color: white;
 }
 

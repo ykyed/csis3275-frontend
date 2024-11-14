@@ -38,8 +38,8 @@
                         </div>
                     </div>
                 </div>
-
-                <p>Rating: {{ shoeDetailInfo.rating }} / 5</p>
+                
+                <p v-if="shoeDetailInfo.rating != 0">Rating: {{ shoeDetailInfo.rating }} / 5</p>
 
                 <!-- Size Selection -->
                 <div class="sizes-grid">
@@ -76,13 +76,14 @@
                     <div class="stars">
                         <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(reviews[0].rating, star)">
                             <defs>
-                                <linearGradient :id="'grad' + star" x1="0%" y1="0%" x2="100%" y2="0%">
+                               
+                                <linearGradient :id="`grad-${reviews[0].id}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
                                     <stop offset="0%" stop-color="rgb(249, 216, 73)" />
                                     <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
                                     <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
                                 </linearGradient>
                             </defs>
-                            <path :fill="'url(#grad' + star + ')'" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                            <path :fill="`url(#grad-${reviews[0].id}-${star}`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
                         </svg>
                     </div>
                 </div>
@@ -100,13 +101,13 @@
                             <div class="stars">
                                 <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(review.rating, star)">
                                     <defs>
-                                        <linearGradient :id="'grad' + star" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <linearGradient :id="`grad-${review.id}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
                                             <stop offset="0%" stop-color="rgb(249, 216, 73)" />
                                             <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
                                             <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
                                         </linearGradient>
                                     </defs>
-                                    <path :fill="'url(#grad' + star + ')'" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                                    <path :fill="`url(#grad-${review.id}-${star}`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
                                 </svg>
                             </div>
                         </div>
@@ -163,29 +164,6 @@ export default {
         this.fetchShoeSizes(productcode);
     },
     methods: {
-        //  // Add size to the product
-        // addSize(productCode, sizeInfo) {
-        //     ApiService.addSizes(productCode, sizeInfo)
-        //     .then(response => {
-        //         console.log('Size added successfully:', response);
-        //         this.fetchShoeSizes(productCode);  // Refresh the sizes list
-        //     })
-        //     .catch(error => {
-        //         console.error("Error adding size:", error);
-        //     });
-        // },
-
-        // // Update existing sizes for the product
-        // updateSize(productCode, sizeInfo) {
-        //     ApiService.updateSizes(productCode, sizeInfo)
-        //     .then(response => {
-        //         console.log('Size updated successfully:', response);
-        //         this.fetchShoeSizes(productCode);  // Refresh the sizes list
-        //     })
-        //     .catch(error => {
-        //         console.error("Error updating size:", error);
-        //     });
-        // },
 
         fetchShoeSizes(productCode) {
             ApiService.getSizeByProductCode(productCode)
@@ -271,11 +249,12 @@ export default {
         },
 
         getStarStyle(rating, star) {
-            console.log("getStarStyle, rating" + rating);
+            console.log("getStarStyle, rating: " + rating + ", star: " + star);
             if (star <= Math.floor(rating)) {
                 return { fill: 'rgb(249, 216, 73)' };
             } else if (star === Math.ceil(rating)) {
                 const percentage = (rating % 1) * 100;
+                console.log("getStarStyle, percentage: " + percentage);
                 return {
                     fill: `url(#grad${star})`,
                     background: `linear-gradient(90deg,  rgb(249, 216, 73)  ${percentage}%, white ${percentage}%)`,

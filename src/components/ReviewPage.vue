@@ -3,7 +3,7 @@
       <h2>{{ productName }}</h2>
 
       <div v-if="shoeDetailInfo">
-      <h2>{{ shoeDetailInfo.name }}</h2>
+      <h2>{{ shoeDetailInfo ? shoeDetailInfo.title : productName }}</h2>
       <p>Price: ${{ shoeDetailInfo.price }}</p>
 
       <!-- 메인 이미지 -->
@@ -198,6 +198,18 @@ export default {
     color: blue;
     font-size: 1.2em;
   }
+
+  .main-image-container{
+    margin-top: 20px;
+  }
+
+  .main-shoe-image{
+    width: 300px;
+    height: auto;
+    border-radius: 5px;
+  }
+
+  
 </style>
   
   

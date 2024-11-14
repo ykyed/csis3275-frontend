@@ -23,6 +23,17 @@
     </header>
 
     <router-view />
+
+    <!-- 로그아웃 확인 팝업 창 -->
+    <div v-if="showSignOutDialog" class="dialog-overlay">
+      <div class="dialog">
+        <p>Are you sure you want to sign out?</p>
+        <div class="buttons">
+          <button class="confirm-btn" @click="logout">Yes</button>
+          <button class="cancel-btn" @click="showSignOutDialog = false">No</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,7 +45,11 @@ import { useCartStore } from './store/cart';
 
 export default {
   name: 'App',
-  data() {},
+  data() {
+    return {
+      showSignOutDialog: false // 팝업 창의 초기 상태를 숨김으로 설정
+  };
+},
 
   computed: {
     userName() {
@@ -94,7 +109,7 @@ export default {
 
     async logout() {
       try {
-        http.post('http://localhost:8080/logout', {}, { withCredentials: true });
+        await http.post('http://localhost:8080/logout', {}, { withCredentials: true });
         const userStore = useUserStore();
         userStore.clearUserName();
         userStore.clearUserRole();
@@ -105,19 +120,32 @@ export default {
         this.$router.push({ name: 'ShoeList' });
       } catch (error) {
         console.error("Logout failed:", error);
+      } finally{
+        this.showSignOutDialog = false;
       }
     },
+    
 
-    async goToLogin() {
+    /* async goToLogin() {
+      
       const response = await ApiService.getUserInfo();
       if (response.data.name && response.data.name.length > 0) {
         console.log("logout");
         this.logout();
+        this.showSignOutDialog = true;
       }
       else {
         this.$router.push({ name: 'UserLogin' });
       }
-    },
+    },*/
+    goToLogin() {
+    const userStore = useUserStore();
+    if (userStore.userName) {
+      this.showSignOutDialog = true; // 팝업 창을 표시하여 로그아웃 여부 확인
+    } else {
+      this.$router.push({ name: 'UserLogin' }); // 로그인 페이지로 이동
+    }
+  },
 
     async goToCart() {
       const response = await ApiService.getUserInfo();
@@ -239,4 +267,48 @@ body {
     margin-right: 10px;        
     padding-bottom: 0px;       
 }
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirm-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: black; /* 기본 색상을 검정색으로 설정 */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.confirm-btn:hover,
+.cancel-btn:hover {
+  background-color: #ccc;
+    color: black;
+}
+
 </style>

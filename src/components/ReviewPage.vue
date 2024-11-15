@@ -57,12 +57,9 @@ export default {
       comment: "",
       reviews: [],
       successMessage: "",
-     // isAuthenticated: false // 추가
     };
   },
   async created() {
-    // 로그인 상태 확인 후, 비회원일 경우 로그인 페이지로 이동
-    //await this.checkAuthentication();
     await this.getShoeDetailInfo(this.productCode); 
     this.fetchReviews();
   },

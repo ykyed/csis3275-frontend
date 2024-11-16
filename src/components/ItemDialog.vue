@@ -69,8 +69,8 @@
           brand: this.item?.brand || '',
           thumbnail: this.item?.thumbnail || '',
           images: this.item?.images ? this.item.images.join(', ') : '',
-          sizeQuantities: Array.from({ length: 21 }, (_, i) => ({
-            size: (3 + i * 0.5).toFixed(1), 
+          sizeQuantities: Array.from({ length: 15 }, (_, i) => ({
+            size: (6 + i * 0.5).toFixed(1), 
             quantity: this.sizes?.find(s => s.size == (3 + i * 0.5))?.quantity || 0
           }))
         }

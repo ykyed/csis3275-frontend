@@ -1,18 +1,21 @@
 <template>
     <div class="review-container">
-      <h2>{{ productName }}</h2>
+
+      <h2>Write a Review</h2>
 
       <div v-if="shoeDetailInfo">
-      <h2>{{ shoeDetailInfo ? shoeDetailInfo.title : productName }}</h2>
-      <p>Price: ${{ shoeDetailInfo.price }}</p>
 
-      <!-- 메인 이미지 -->
-      <div class="main-image-container">
-        <img :src="mainImage" alt="Main Shoe Image" class="main-shoe-image"/>
+        <!-- 메인 이미지 -->
+        <div class="main-image-container">
+          <img :src="mainImage" alt="Main Shoe Image" class="main-shoe-image"/>
+        </div>
+
+        <h4 class="title-text">{{ shoeDetailInfo ? shoeDetailInfo.title : productName }}</h4>
       </div>
-    </div>
-    
 
+      <hr>
+
+      <label>Overall rating</label>
       <div class="rating">
           <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :class="{ filled: star <= rating }" @click="setRating(star)">
               <path d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
@@ -119,80 +122,102 @@ export default {
 };
 </script>
 
-    <style scoped>
-    .review-container {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-    }
+<style scoped>
+.review-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
 
-    h2 {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    }
+.review-container > h2 {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
 
-    .star-svg {
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      fill: #ccc;
-      transition: fill 0.3s ease;
-    }
+.title-text {
+  margin-bottom: 50px;
+}
 
-    .star-svg.filled {
-      fill: rgb(249, 216, 73);
-    }
-
-    .review-form label {
-    display: block;
-    margin: 10px 0 5px;
-    }
-
-    .review-form input,
-    .review-form textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    }
-
-    button {
-      padding-top: 0.7rem;
-      padding-bottom: 0.7rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      font-size: 1rem;
-      background-color: black;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
-
-    button:hover {
-      background-color: #ccc;
-      color: black;
-    }
-
-  .success-message {
-    margin-top: 20px;
-    color: blue;
-    font-size: 1.2em;
-  }
-
-  .main-image-container{
-    margin-top: 20px;
-  }
-
-  .main-shoe-image{
-    width: 300px;
-    height: auto;
-    border-radius: 5px;
-  }
-
+.review-container > h5 { 
   
+
+}
+
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.rating {
+  text-align: left;
+}
+
+.star-svg {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  fill: #ccc;
+  transition: fill 0.3s ease;
+}
+
+.star-svg.filled {
+  fill: rgb(249, 216, 73);
+}
+
+label {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: bolder;
+  margin-top: 30px;
+}
+
+.review-form input,
+.review-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 1rem;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #ccc;
+  color: black;
+}
+
+.success-message {
+  margin-top: 20px;
+  color: blue;
+  font-size: 1.2em;
+}
+
+.main-image-container{
+  margin-top: 20px;
+}
+
+.main-shoe-image{
+  width: 300px;
+  height: auto;
+  border-radius: 5px;
+}
+
+
 </style>
-  
+
   

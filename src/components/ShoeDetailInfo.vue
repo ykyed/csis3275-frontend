@@ -19,10 +19,8 @@
 
             <!-- Info Section -->
             <div class="info-section" v-if="!loading">
-                <h2>{{ shoeDetailInfo.title }}</h2>
-                <p>Price: ${{ shoeDetailInfo.price }}</p>
 
-                <div class="rating-container">
+                <div class="rating-container-shoeinfo" v-if="shoeDetailInfo.rating != 0">
                     <div class="rating-bar">
                         <div class="stars">
                             <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(shoeDetailInfo.rating, star)">
@@ -37,13 +35,19 @@
                             </svg>
                         </div>
                     </div>
+
+                    <h5>{{ shoeDetailInfo.rating }} / 5, reviews: {{ shoeDetailInfo.reviewCount }}</h5>
                 </div>
+
+                <h4>{{ shoeDetailInfo.title }}</h4>
+                <h5>Price: ${{ shoeDetailInfo.price }}</h5>
+
+                <hr>
                 
-                <p v-if="shoeDetailInfo.rating != 0">Rating: {{ shoeDetailInfo.rating }} / 5</p>
 
                 <!-- Size Selection -->
                 <div class="sizes-grid">
-                    <h3>Select Size:</h3>
+                    <h5>Select Size:</h5>
                     <div class="grid-container">
                         <button 
                         v-for="(sizeInfo, index) in shoeSizes" 
@@ -66,64 +70,66 @@
         </div>
 
         <!-- Review Section -->
-        <div v-if="reviews.length">
-            <h3>Customer Reviews</h3>
-            
-            <div class="review" v-if="reviews.length > 0">
-            <h4>{{ reviews[0].title }}</h4>
-            <div class="rating-container">
-                <div class="rating-bar">
-                    <div class="stars">
-                        <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(reviews[0].rating, star)">
-                            <defs>
-                               
-                                <linearGradient :id="`grad-${reviews[0].id}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="rgb(249, 216, 73)" />
-                                    <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
-                                    <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
-                                </linearGradient>
-                            </defs>
-                            <path :fill="`url(#grad-${reviews[0].id}-${star}`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <p>Rating: {{ reviews[0].rating }} / 5</p>
-            <p>{{ reviews[0].comment }}</p>
-        </div>
-
-        <!-- Show more reviews if button clicked -->
-            <div v-show="showMoreReviews">
-                <div v-for="(review, index) in reviews.slice(1)" :key="index" class="review">
-                    <h4>{{ review.title }}</h4>
+        <div class="review-section">
+            <div v-if="reviews.length" >
+                <h4>Customer Reviews</h4>
+                
+                <div class="review" v-if="reviews.length > 0">
+                    <h4>{{ reviews[0].title }}</h4>
                     <div class="rating-container">
                         <div class="rating-bar">
                             <div class="stars">
-                                <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(review.rating, star)">
+                                <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(reviews[0].rating, star)">
                                     <defs>
-                                        <linearGradient :id="`grad-${review.id}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    
+                                        <linearGradient :id="`grad-${reviews[0].id}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
                                             <stop offset="0%" stop-color="rgb(249, 216, 73)" />
-                                            <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
-                                            <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                            <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                            <stop :offset="Math.max((reviews[0].rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
                                         </linearGradient>
                                     </defs>
-                                    <path :fill="`url(#grad-${review.id}-${star}`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                                    <path :fill="`url(#grad-${reviews[0].id}-${star}`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
                                 </svg>
                             </div>
                         </div>
                     </div>
-                    <p>Rating: {{ review.rating }} / 5</p>
-                    <p>{{ review.comment }}</p>
+                    <h5>Rating: {{ reviews[0].rating }} / 5</h5>
+                    <h5>{{ reviews[0].comment }}</h5>
                 </div>
-            </div>
-            <!-- Show More / Show Less Button -->
-            <button v-if="reviews.length > 1" @click="toggleMoreReviews" class="more-reviews-button">
-                {{ showMoreReviews ? 'Show Less' : 'Show More' }}
-            </button>
-        </div>
 
-        <div v-else>
-            <p>No reviews available for this product.</p>
+                <!-- Show more reviews if button clicked -->
+                <div v-show="showMoreReviews">
+                    <div v-for="(review, index) in reviews.slice(1)" :key="index" class="review">
+                        <h4>{{ review.title }}</h4>
+                        <div class="rating-container">
+                            <div class="rating-bar">
+                                <div class="stars">
+                                    <svg v-for="star in 5" :key="star" viewBox="0 0 24 24" class="star-svg" :style="getStarStyle(review.rating, star)">
+                                        <defs>
+                                            <linearGradient :id="`grad-${review.id}-${star}`" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stop-color="rgb(249, 216, 73)" />
+                                                <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="rgb(249, 216, 73)" />
+                                                <stop :offset="Math.max((review.rating - star + 1) * 100, 0) + '%'" stop-color="transparent" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path :fill="`url(#grad-${review.id}-${star}`" d="M12 3.1c.5 0 .9.3 1.1.7l1.8 3.6 3.9.6c.5.1.9.5 1 .9.1.5-.1 1-.5 1.3l-2.9 2.8.7 4.1c.1.5-.1 1-.5 1.2-.3.3-.8.3-1.2.1L12 16.5l-3.7 1.9c-.4.2-.9.1-1.2-.1-.4-.2-.6-.7-.5-1.2l.7-4.1-2.9-2.8c-.4-.3-.6-.8-.5-1.3.1-.5.5-.8 1-.9l3.9-.6 1.8-3.6c.2-.4.6-.7 1.1-.7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <h5>Rating: {{ review.rating }} / 5</h5>
+                        <h5>{{ review.comment }}</h5>
+                    </div>
+                </div>
+                <!-- Show More / Show Less Button -->
+                <button v-if="reviews.length > 1" @click="toggleMoreReviews" class="more-reviews-button">
+                    {{ showMoreReviews ? 'Show Less' : 'Show More' }}
+                </button>
+            </div>
+
+            <div v-else class="no-reviews">
+                <h5>No reviews available for this product.</h5>
+            </div>
         </div>
 
         <!-- Review Button -->
@@ -191,9 +197,15 @@ export default {
                 });
         },
 
-        writeAReview(){
+        async writeAReview(){
             //this.$router.push('/reviews'); // review 페이지로 이동
-            this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
+            const user = await ApiService.getUserInfo();
+            if (user.data.name && user.data.name.length > 0) {
+                this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
+            }
+            else {
+                this.$router.push({ name: 'UserLogin' });
+            }
         },
 
         async addToCart() {
@@ -275,8 +287,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 70vh;
-    margin-top: 10px;
+    height: fit-content;
+    margin-top: 50px;
 }
 
 .image-section, .info-section {
@@ -285,10 +297,20 @@ export default {
 
 .image-section {
     margin-right: 20px;
+    height: 500px;
 }
 
 .info-section {
     margin-left: 20px;
+    align-items: start;
+    height: max-content;
+    height: 500px;
+}
+
+.info-section > h4, h5 {
+    text-align: left;
+    margin-top: 0px;
+    margin-left: 5px;
 }
 
 .main-image-container {
@@ -330,13 +352,14 @@ export default {
 
 .grid-container { 
     display: grid;
-    grid-template-columns: repeat(5, 90px); /* 5 columns */
+    grid-template-columns: repeat(5, 80px); /* 5 columns */
     grid-template-rows: repeat(3, auto);  /* 3 rows */
-    gap: 10px;
-    grid-gap: 10px;
+    gap: 6px;
+    grid-gap: 6px;
     justify-content: center;
     justify-items: center;  /* Center buttons horizontally */
-    align-items: center;    /* Center buttons vertically */
+    align-items: center;
+    margin-left: 5px;    /* Center buttons vertically */
 }
 
 .grid-container button {
@@ -347,7 +370,7 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    font-size: 16px;  /* Increase font size for better visibility */
+    font-size: 13px;  /* Increase font size for better visibility */
 }
 
 .sizes button:hover {
@@ -397,6 +420,11 @@ button:disabled {
     border-radius: 5px;
 }
 
+.review > h5 {
+    text-align: center;
+    font-weight: lighter;
+}
+
 .more-reviews-button {
     margin: 2px;
     padding-top: 0.7rem;
@@ -435,29 +463,56 @@ button:disabled {
     color: black;
 }
 
+.rating-container-shoeinfo {
+    display: flex;
+    align-items: start;
+    align-content: center;
+    height: fit-content;
+    padding-left: 0px;
+}
+
+.rating-container-shoeinfo > h5 {
+    margin-top: 8px;
+    margin-left: 5px;
+    font-weight: lighter;
+    font-size: 10px;
+}
+
 .rating-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
-}
-
-.rating-bar {
-  display: flex;
-  align-items: center;
-}
-
-.stars {
-    display: flex;
+    align-content: center;
+    justify-content: center;
+    height: fit-content;
+    padding-left: 0px;
 }
 
 .star-svg {
     width: 25px;
     height: 25px;
-    margin-right: 5px;
+    margin-right: 0px;
 }
 
 .rating-number {
     font-size: 16px;
     margin-left: 10px;
+}
+
+.review-section {
+    margin-top: 50px;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.shoe-detail-wrapper > hr {
+    width: 60%;
+}
+
+.no-reviews > h5 {
+    text-align: center;
 }
 </style>

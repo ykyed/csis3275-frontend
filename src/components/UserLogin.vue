@@ -43,6 +43,7 @@
 import ApiService from "../services/ApiService"; 
 import http from "../http-common.js";
 import { useUserStore } from '../store/user';
+import { useCartStore } from '../store/cart';
 
 export default {
   data() {
@@ -64,8 +65,8 @@ export default {
           email: this.email,
           password: this.password,
         })
-          .then(response => {
-            console.log(response.data);
+          .then(async response => {
+            console.log("handleLogin: " + response.data);
 
             if (response.data === true) { // 서버가 true를 반환하면 로그인 성공
               this.successMessage = "You have successfully logged in!";
@@ -121,6 +122,11 @@ export default {
         }
         else if (userInfoResponse.data.role === "USER") {
         
+          const cartInfos = await ApiService.getCartItemByUser(userInfoResponse.data.username);
+          const cartStore = useCartStore();
+          cartStore.setCartItem(cartInfos.data.length);
+          console.log("signIn: " + cartInfos.data.length);
+
           setTimeout(() => {
             this.$router.back(); 
           }, 500);

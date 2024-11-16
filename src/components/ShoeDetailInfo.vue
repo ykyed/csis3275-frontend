@@ -74,7 +74,7 @@
         <div class="review-section">
 
             <button @click="toggleDropdown('reviewDropdown')" class="dropdown-btn">
-                <h4>Customer Reviews</h4>
+                <h4>Customer Reviews ({{reviews.length}})</h4>
                 <span class="dropdownicon">{{ reviewDropdown ? '-' : '+' }}</span>
             </button>
 

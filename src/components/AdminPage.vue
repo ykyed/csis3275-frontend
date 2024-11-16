@@ -155,7 +155,10 @@ export default {
             console.log("handleSave update: " + sizes[0].id);
             await ApiService.updateSizes(itemInfo.productCode, sizes);
           } else {
-            await ApiService.addItem(itemInfo);
+            
+            const response = await ApiService.addItem(itemInfo);
+            console.log("handleSave add: " + response.data);
+            itemInfo.id = response.data;
             this.items.push(itemInfo);
             await ApiService.addSizes(itemInfo.productCode, sizes);
           }

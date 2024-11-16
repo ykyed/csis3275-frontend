@@ -198,16 +198,15 @@ export default {
         },
 
         async writeAReview(){
-            //this.$router.push('/reviews'); // review 페이지로 이동
-            const user = await ApiService.getUserInfo();
-            if (user.data.name && user.data.name.length > 0) {
+            const response = await ApiService.getUserInfo();
+            if(response.data.name && response.data.name.length >0){
                 this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
             }
-            else {
+            //this.$router.push('/reviews'); // review 페이지로 이동
+            else{
                 this.$router.push({ name: 'UserLogin' });
             }
         },
-
         async addToCart() {
 
             const response = await ApiService.getUserInfo();

@@ -57,30 +57,13 @@ export default {
       comment: "",
       reviews: [],
       successMessage: "",
-     // isAuthenticated: false // 추가
     };
   },
   async created() {
-    // 로그인 상태 확인 후, 비회원일 경우 로그인 페이지로 이동
-    //await this.checkAuthentication();
     await this.getShoeDetailInfo(this.productCode); 
     this.fetchReviews();
   },
   methods: {
-   /* async checkAuthentication() {
-      try {
-        const userInfo = await ApiService.getUserInfo();
-        console.log("User info:", userInfo); 
-        if (userInfo.data && userInfo.data.email) {
-          this.isAuthenticated = true; // 로그인된 상태
-        } else {
-          throw new Error("Not logged in");
-        }
-      } catch (error) {
-        // 로그인되지 않은 경우 로그인 페이지로 이동
-        this.$router.push({ name: "UserLogin" });
-      }
-    },*/
     async getShoeDetailInfo(productCode) {
       try {
         const response = await ApiService.getShoeDetailInfo(productCode);

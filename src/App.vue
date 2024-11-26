@@ -24,7 +24,6 @@
 
     <router-view />
 
-    <!-- 로그아웃 확인 팝업 창 -->
     <div v-if="showSignOutDialog" class="dialog-overlay">
       <div class="dialog">
         <p>Are you sure you want to sign out?</p>
@@ -47,7 +46,7 @@ export default {
   name: 'App',
   data() {
     return {
-      showSignOutDialog: false // 팝업 창의 초기 상태를 숨김으로 설정
+      showSignOutDialog: false 
   };
 },
 
@@ -124,26 +123,13 @@ export default {
         this.showSignOutDialog = false;
       }
     },
-    
 
-    /* async goToLogin() {
-      
-      const response = await ApiService.getUserInfo();
-      if (response.data.name && response.data.name.length > 0) {
-        console.log("logout");
-        this.logout();
-        this.showSignOutDialog = true;
-      }
-      else {
-        this.$router.push({ name: 'UserLogin' });
-      }
-    },*/
     goToLogin() {
     const userStore = useUserStore();
     if (userStore.userName) {
-      this.showSignOutDialog = true; // 팝업 창을 표시하여 로그아웃 여부 확인
+      this.showSignOutDialog = true; 
     } else {
-      this.$router.push({ name: 'UserLogin' }); // 로그인 페이지로 이동
+      this.$router.push({ name: 'UserLogin' });
     }
   },
 
@@ -298,7 +284,7 @@ body {
 .cancel-btn {
   padding: 10px 20px;
   cursor: pointer;
-  background-color: black; /* 기본 색상을 검정색으로 설정 */
+  background-color: black;
   color: white;
   border: none;
   border-radius: 4px;

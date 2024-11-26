@@ -5,7 +5,6 @@
 
       <div v-if="shoeDetailInfo">
 
-        <!-- 메인 이미지 -->
         <div class="main-image-container">
           <img :src="mainImage" alt="Main Shoe Image" class="main-shoe-image"/>
         </div>
@@ -138,11 +137,6 @@ export default {
   margin-bottom: 50px;
 }
 
-.review-container > h5 { 
-  
-
-}
-
 h2 {
   font-size: 1.5em;
   margin-bottom: 20px;
@@ -216,8 +210,6 @@ button:hover {
   height: auto;
   border-radius: 5px;
 }
-
-
 </style>
 
   

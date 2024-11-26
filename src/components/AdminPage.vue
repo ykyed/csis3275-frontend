@@ -146,13 +146,14 @@ export default {
           const { sizes, ...itemInfo } = itemData;
 
           if (this.currentItem) {
+            console.log("handleSave update: " + this.currentItem.id);
+            itemInfo.id = this.currentItem.id;
+            this.items.push(itemInfo);
             await ApiService.updateItem(itemInfo);
             this.items = this.items.map(item =>
                item.productCode === itemInfo.productCode ? itemInfo : item
             );
-
-            console.log("handleSave update: " + sizes[0].productCode);
-            console.log("handleSave update: " + sizes[0].id);
+            
             await ApiService.updateSizes(itemInfo.productCode, sizes);
           } else {
             

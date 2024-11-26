@@ -340,11 +340,6 @@ export default {
     font-weight: bolder;
 }
 
-/* .star {
-    font-size: 12px;
-    color: transparent;
-} */
-
 .rating-container {
     display: flex;
     align-items: center; 

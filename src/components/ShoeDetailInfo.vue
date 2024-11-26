@@ -54,7 +54,7 @@
                         @click="selectSize(sizeInfo.size)" 
                         :class="{ selected: selectedSize === sizeInfo.size }"
                         :disabled="sizeInfo.quantity == 0">
-                        {{ sizeInfo.size }} <!-- 사이즈만 출력 -->
+                        {{ sizeInfo.size }}
                         </button>
                     </div>
                 </div>
@@ -124,7 +124,6 @@
 
 <script>
 import ApiService from "../services/ApiService";
-import '@fortawesome/fontawesome-free/css/all.css';
 import { useCartStore } from '../store/cart';
 
 export default {
@@ -179,7 +178,6 @@ export default {
             if(response.data.name && response.data.name.length >0){
                 this.$router.push({ name: 'ReviewPage', params: { productCode: this.productCode } });
             }
-            //this.$router.push('/reviews'); // review 페이지로 이동
             else{
                 this.$router.push({ name: 'UserLogin' });
             }
@@ -220,20 +218,20 @@ export default {
         },
 
         setMainImage(image) {
-            this.mainImage = image; // 클릭된 썸네일 이미지를 메인 이미지로 변경
+            this.mainImage = image;
         },
 
         // Generate shoe sizes dynamically
         generateShoeSizes(start, end, step) {
             const sizes = [];
             for (let size = start; size <= end; size += step) {
-                sizes.push(size.toFixed(1)); // Keep one decimal for half sizes
+                sizes.push(size.toFixed(1)); 
             }
             return sizes;
         },
         // Handle size selection
         selectSize(size) {
-            this.selectedSize = size;  // Mark selected size
+            this.selectedSize = size; 
         },
 
         getStarStyle(rating, star) {

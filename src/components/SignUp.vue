@@ -71,7 +71,7 @@
             this.passwordError = "Minimum of 8 characters. Uppercase, lowercase letters, and one number";
             return;
           } else {
-            this.passwordError = ""; // Clear error if validation passes
+            this.passwordError = ""; 
           }
 
           ApiService.signup({
@@ -89,7 +89,6 @@
               this.successMessage = "Congratulations! Your account has been successfully created!";
               this.errorMessage = "";
 
-              // 성공 메시지를 보여준 후 로그인 페이지로 이동
               setTimeout(() => {
                 this.$router.back();
               }, 1000);
@@ -111,11 +110,11 @@
   <style scoped>
   .signup-container {
     max-width: 400px;
-    margin: 100px auto; /* 위쪽 여백을 100px로 설정하여 아래로 내리기 */
-    padding: 20px; /* 내부 여백 추가 */
-    border: 1px solid #ccc; /* 테두리 추가 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    background-color: #f9f9f9; /* 배경색 추가 (선택 사항) */
+    margin: 100px auto; 
+    padding: 20px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    background-color: #f9f9f9; 
     font-family: 'Arial', sans-serif;
   }
 

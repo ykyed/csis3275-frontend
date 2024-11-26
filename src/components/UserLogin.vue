@@ -25,12 +25,10 @@
         <button type="submit" class="login-button">Sign in</button>
       </form>
   
-      <!-- 로그인 실패 시 에러 메시지 -->
       <div v-if="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
 
-    <!-- Button to navigate to SignUp page -->
     <p>Would you like to join us?<router-link to="/SignUp">
         <br>Sign up</router-link></p>
         
@@ -68,7 +66,7 @@ export default {
           .then(async response => {
             console.log("handleLogin: " + response.data);
 
-            if (response.data === true) { // 서버가 true를 반환하면 로그인 성공
+            if (response.data === true) {
               this.successMessage = "You have successfully logged in!";
               this.errorMessage = "";
 
@@ -76,15 +74,15 @@ export default {
                 this.$router.back(); 
               }, 1000);
             } else {
-              this.errorMessage = "Invalid email or password"; // 실패 메시지
+              this.errorMessage = "Invalid email or password"; 
             }
           })
           .catch(error => {
-            this.errorMessage = "Login failed."; // 서버 호출 중 에러 처리
+            this.errorMessage = "Login failed.";
             console.error(error);
           });
       } else {
-        this.errorMessage = "Please enter both email and password."; // 유효성 검사
+        this.errorMessage = "Please enter both email and password."; 
       }
     },
 
@@ -146,11 +144,11 @@ export default {
   <style scoped>
   .login-container {
     max-width: 400px;
-    margin: 100px auto; /* 위쪽 여백을 100px로 설정하여 아래로 내리기 */
-    padding: 20px; /* 내부 여백 추가 */
-    border: 1px solid #ccc; /* 테두리 추가 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    background-color: #f9f9f9; /* 배경색 추가 (선택 사항) */
+    margin: 100px auto; 
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px; 
+    background-color: #f9f9f9; 
 
   }
   
